@@ -9,17 +9,24 @@ import { Authors } from './src/collections/Authors'
 import { Header } from './src/globals/Header'
 import { Footer } from './src/globals/Footer'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
-    user: 'users',
+    user: Users.slug,
+    meta: {
+      titleSuffix: '- Blog Admin',
+    },
   },
   collections: [Users, Posts, Categories, Media, Authors],
   globals: [Header, Footer],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
-    outputFile: path.resolve(__dirname, '../payload-types.ts'),
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
