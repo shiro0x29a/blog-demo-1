@@ -28,14 +28,16 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
   const currentPage = parseInt(page || '1', 10)
   const limit = 9
 
-  const [postsData, categories] = await Promise.all([
+  const [posts, categories] = await Promise.all([
     getPosts({ page: currentPage, limit, tag }),
     getCategories(),
   ])
 
-  if (!postsData) {
+  if (!posts) {
     notFound()
   }
+
+  const totalPages = Math.ceil(posts.totalDocs / limit)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -47,7 +49,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          {postsData.docs.length === 0 ? (
+          {posts.docs.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 No posts found with this tag. Check back soon!
@@ -56,18 +58,18 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {postsData.docs.map((post) => (
+                {posts.docs.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>
 
-              {postsData.totalPages > 1 && (
+              {totalPages > 1 && (
                 <div className="mt-8">
                   <Pagination
-                    currentPage={postsData.page}
-                    totalPages={postsData.totalPages}
-                    hasNextPage={postsData.hasNextPage}
-                    hasPrevPage={postsData.hasPrevPage}
+                    currentPage={posts.page}
+                    totalPages={totalPages}
+                    hasNextPage={posts.hasNextPage}
+                    hasPrevPage={posts.hasPrevPage}
                   />
                 </div>
               )}

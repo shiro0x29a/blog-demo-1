@@ -1,5 +1,7 @@
-import { payloadFetch } from './client'
-import type { Post, Category, Author, Media, PaginatedResponse, PayloadGlobals } from './types'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+
+const payload = await getPayload({ config: configPromise })
 
 export async function getPosts(params?: {
   page?: number
@@ -8,117 +10,125 @@ export async function getPosts(params?: {
   tag?: string
   featured?: boolean
   sort?: string
-}): Promise<PaginatedResponse<Post> | null> {
-  const queryParams: Record<string, string | number | boolean> = {
-    page: params?.page || 1,
-    limit: params?.limit || 10,
-    depth: 2,
+}) {
+  const page = params?.page || 1
+  const limit = params?.limit || 10
+  
+  const where: Record<string, any> = {
+    status: {
+      equals: 'published',
+    },
   }
 
   if (params?.category) {
-    queryParams['where[categories][equals]'] = params.category
+    where.categories = {
+      equals: params.category,
+    }
   }
 
   if (params?.tag) {
-    queryParams['where[tags][contains]'] = params.tag
+    where.tags = {
+      contains: params.tag,
+    }
   }
 
   if (params?.featured !== undefined) {
-    queryParams['where[featured][equals]'] = params.featured
+    where.featured = {
+      equals: params.featured,
+    }
   }
 
-  if (params?.sort) {
-    queryParams['sort'] = params.sort
-  } else {
-    queryParams['sort'] = '-publishedAt'
-  }
+  const sort = params?.sort || '-publishedAt'
 
-  queryParams['where[status][equals]'] = 'published'
-
-  const { data } = await payloadFetch<PaginatedResponse<Post>>('/api/posts', {
-    params: queryParams,
+  const posts = await payload.find({
+    collection: 'posts',
+    page,
+    limit,
+    depth: 2,
+    sort,
+    where,
   })
 
-  return data
+  return posts
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Post>>('/api/posts', {
-    params: {
-      'where[slug][equals]': slug,
-      depth: 3,
+export async function getPostBySlug(slug: string) {
+  const posts = await payload.find({
+    collection: 'posts',
+    depth: 3,
+    where: {
+      slug: {
+        equals: slug,
+      },
     },
   })
 
-  return data?.docs[0] || null
+  return posts.docs[0] || null
 }
 
-export async function getCategories(): Promise<Category[] | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Category>>('/api/categories', {
-    params: {
-      limit: 100,
-      sort: 'name',
+export async function getCategories() {
+  const categories = await payload.find({
+    collection: 'categories',
+    limit: 100,
+    sort: 'name',
+  })
+
+  return categories.docs
+}
+
+export async function getCategoryBySlug(slug: string) {
+  const categories = await payload.find({
+    collection: 'categories',
+    where: {
+      slug: {
+        equals: slug,
+      },
     },
   })
 
-  return data?.docs || null
+  return categories.docs[0] || null
 }
 
-export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Category>>('/api/categories', {
-    params: {
-      'where[slug][equals]': slug,
+export async function getAuthors() {
+  const authors = await payload.find({
+    collection: 'authors',
+    limit: 100,
+  })
+
+  return authors.docs
+}
+
+export async function getFeaturedPosts(limit: number = 3) {
+  const posts = await payload.find({
+    collection: 'posts',
+    limit,
+    depth: 2,
+    sort: '-publishedAt',
+    where: {
+      featured: {
+        equals: true,
+      },
+      status: {
+        equals: 'published',
+      },
     },
   })
 
-  return data?.docs[0] || null
+  return posts.docs
 }
 
-export async function getAuthors(): Promise<Author[] | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Author>>('/api/authors', {
-    params: {
-      limit: 100,
+export async function getRecentPosts(limit: number = 5) {
+  const posts = await payload.find({
+    collection: 'posts',
+    limit,
+    depth: 1,
+    sort: '-publishedAt',
+    where: {
+      status: {
+        equals: 'published',
+      },
     },
   })
 
-  return data?.docs || null
-}
-
-export async function getGlobals(): Promise<PayloadGlobals | null> {
-  const [headerResult, footerResult] = await Promise.all([
-    payloadFetch<any>('/api/globals/header'),
-    payloadFetch<any>('/api/globals/footer'),
-  ])
-
-  return {
-    header: headerResult.data || undefined,
-    footer: footerResult.data || undefined,
-  }
-}
-
-export async function getFeaturedPosts(limit: number = 3): Promise<Post[] | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Post>>('/api/posts', {
-    params: {
-      'where[featured][equals]': true,
-      'where[status][equals]': 'published',
-      limit,
-      sort: '-publishedAt',
-      depth: 2,
-    },
-  })
-
-  return data?.docs || null
-}
-
-export async function getRecentPosts(limit: number = 5): Promise<Post[] | null> {
-  const { data } = await payloadFetch<PaginatedResponse<Post>>('/api/posts', {
-    params: {
-      'where[status][equals]': 'published',
-      limit,
-      sort: '-publishedAt',
-      depth: 1,
-    },
-  })
-
-  return data?.docs || null
+  return posts.docs
 }

@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Add blog posts
   const postsData = await getPosts({ limit: 1000 });
   const postsSitemap =
-    postsData?.docs.map((post) => ({
+    postsData.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.updatedAt),
       changeFrequency: "weekly" as const,
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Add blog categories
   const categories = await getCategories();
   const categoriesSitemap =
-    categories?.map((category) => ({
+    categories.map((category) => ({
       url: `${baseUrl}/blog/category/${category.slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,

@@ -1,4 +1,4 @@
-const PAYLOAD_API = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || 'http://localhost:3000'
+const PAYLOAD_API = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || ''
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | boolean>
@@ -11,7 +11,9 @@ async function payloadFetch<T>(
   try {
     const { params, ...restOptions } = options
 
-    const url = new URL(`${PAYLOAD_API}${endpoint}`)
+    // Build URL - if running in same Next.js app, use relative path
+    const baseUrl = PAYLOAD_API || ''
+    const url = new URL(`${baseUrl}${endpoint}`, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -25,6 +27,7 @@ async function payloadFetch<T>(
         'Content-Type': 'application/json',
         ...restOptions.headers,
       },
+      cache: 'no-store',
     })
 
     if (!response.ok) {

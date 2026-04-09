@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSearchParams, useRouter } from 'next/navigation'
