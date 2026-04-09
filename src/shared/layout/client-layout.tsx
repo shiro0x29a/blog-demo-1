@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Header from "@/shared/layout/header";
+import { Footer } from "@/shared/layout/footer";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ const ClientLayout = ({ children }: ClientLayoutProps) => {
     <>
       {showHeader && <Header />}
       <div className="min-h-screen transition-all duration-300 ease-in-out">{children}</div>
+      {showHeader && <Footer />}
     </>
   );
 };

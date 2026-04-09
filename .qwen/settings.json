@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/anik/code/templates/blog/**)"
+    ]
+  },
+  "$version": 3
+}

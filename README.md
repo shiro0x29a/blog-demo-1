@@ -41,6 +41,75 @@ Most Next.js starters leave you wiring from scratch. This boilerplate prioritize
 - [Tailwind CSS v4](https://tailwindcss.com/) - Utility-first styling
 - [TypeScript](https://www.typescriptlang.org/) - Strict mode for type safety
 - [Next.js 16](https://nextjs.org/) - App Router, Server Components, recommended stable 16.x
+- **[Payload CMS](https://payloadcms.com/) - Headless CMS with PostgreSQL for blog/content management**
+
+## 📝 Blog Features
+
+The boilerplate includes a fully-featured blog powered by **Payload CMS**:
+
+- **Payload CMS Admin** - Beautiful admin UI for managing content at `/admin`
+- **PostgreSQL Database** - Production-ready relational database
+- **Collections**: Posts, Categories, Authors, Media
+- **Rich Text Editor** - Lexical-based content editor
+- **SEO Optimized** - Dynamic sitemap, RSS feed, JSON-LD schema, Open Graph
+- **Server Components** - Fast, cached page rendering
+- **Features**:
+  - Blog listing with pagination (`/blog`)
+  - Individual post pages (`/blog/[slug]`)
+  - Category filtering (`/blog/category/[slug]`)
+  - Tag filtering (`/blog/tag/[tag]`)
+  - RSS feed (`/blog/rss.xml`)
+
+### Blog Setup
+
+1. **Configure PostgreSQL**:
+   ```bash
+   # Install PostgreSQL (if not already installed)
+   # Create database
+   createdb blog_db
+   
+   # Or using psql
+   psql -U postgres -c "CREATE DATABASE blog_db;"
+   ```
+
+2. **Set Environment Variables**:
+   Copy `.env.example` to `.env` and configure:
+   ```env
+   PAYLOAD_SECRET=your_secret_key_here
+   PAYLOAD_PUBLIC_URL=http://localhost:3000
+   DATABASE_URI=postgresql://postgres:postgres@localhost:5432/blog_db
+   ```
+
+3. **Run Database Migrations**:
+   ```bash
+   npm run payload:migrate
+   ```
+
+4. **Access Payload Admin**:
+   Start the dev server and visit `http://localhost:3000/admin`
+   - Default admin: Create your first user via the admin panel
+
+5. **Create Content**:
+   - Add authors in Authors collection
+   - Add categories in Categories collection  
+   - Create blog posts in Posts collection
+   - Upload images in Media collection
+
+### Blog Scripts
+
+```bash
+# Generate TypeScript types from Payload schema
+npm run payload:generate-types
+
+# Run database migrations
+npm run payload:migrate
+
+# Fresh migrations (drops all tables)
+npm run payload:migrate:fresh
+
+# Run Payload standalone (optional)
+npm run payload
+```
 
 ## Quick Start
 
