@@ -11,9 +11,9 @@ export async function getPosts(params?: {
   featured?: boolean
   sort?: string
 }) {
-  const page = params?.page || 1
+  const page = params?.page && !isNaN(params.page) ? params.page : 1
   const limit = params?.limit || 10
-  
+
   const where: Record<string, any> = {
     status: {
       equals: 'published',
@@ -22,7 +22,7 @@ export async function getPosts(params?: {
 
   if (params?.category) {
     where.categories = {
-      equals: params.category,
+      contains: params.category,
     }
   }
 
@@ -40,6 +40,8 @@ export async function getPosts(params?: {
 
   const sort = params?.sort || '-publishedAt'
 
+  console.log('[getPosts] params:', { page, limit, category: params?.category, where })
+
   const posts = await payload.find({
     collection: 'posts',
     page,
@@ -48,6 +50,8 @@ export async function getPosts(params?: {
     sort,
     where,
   })
+
+  console.log('[getPosts] result:', { totalDocs: posts.totalDocs, docsCount: posts.docs.length })
 
   return posts
 }
@@ -77,6 +81,7 @@ export async function getCategories() {
 }
 
 export async function getCategoryBySlug(slug: string) {
+  console.log('[getCategoryBySlug] slug:', slug)
   const categories = await payload.find({
     collection: 'categories',
     where: {
@@ -86,6 +91,9 @@ export async function getCategoryBySlug(slug: string) {
     },
   })
 
+  console.log('[getCategoryBySlug] totalDocs:', categories.totalDocs)
+  console.log('[getCategoryBySlug] docs:', JSON.stringify(categories.docs, null, 2))
+  console.log('[getCategoryBySlug] result:', categories.docs[0]?.id || null)
   return categories.docs[0] || null
 }
 

@@ -5,7 +5,8 @@
       "WebFetch(github.com)",
       "WebFetch(payloadcms.com)",
       "WebSearch",
-      "Read(//home/anik/code/templates/payload/templates/website/src/**)"
+      "Read(//home/anik/code/templates/payload/templates/website/src/**)",
+      "Read(//home/anik/code/templates/payload/templates/website/**)"
     ]
   },
   "$version": 3
