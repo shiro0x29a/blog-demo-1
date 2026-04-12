@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, User, Tag, FolderOpen } from 'lucide-react'
+import { Calendar, User, Tag, ChevronRight } from 'lucide-react'
 import type { Post } from '@/shared/lib/payload/types'
 
 interface PostMetaProps {
@@ -22,9 +22,11 @@ export function PostMeta({ post }: PostMetaProps) {
         </div>
       )}
 
-      <h1 className="text-4xl md:text-5xl font-bold mb-4">{post.title}</h1>
+      <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.title}</h1>
 
-      <div className="flex flex-wrap gap-4 mb-6">
+      {/* Row 1: Author, Date, Tags */}
+      <div className="flex flex-wrap items-center gap-4 mb-4">
+        {/* Author */}
         <div className="flex items-center gap-2 text-muted-foreground">
           <User className="w-4 h-4" />
           {post.author.avatar && (
@@ -39,6 +41,7 @@ export function PostMeta({ post }: PostMetaProps) {
           <span>{post.author.name}</span>
         </div>
 
+        {/* Date */}
         {post.publishedAt && (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="w-4 h-4" />
@@ -51,47 +54,55 @@ export function PostMeta({ post }: PostMetaProps) {
             </time>
           </div>
         )}
-      </div>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        {post.categories && post.categories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {post.categories.map((category) => (
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag className="w-4 h-4 text-muted-foreground" />
+            {post.tags.map((tag, index) => (
               <Link
-                key={category.id}
-                href={`/blog/category/${category.slug}`}
-                className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                key={index}
+                href={`/blog/tag/${encodeURIComponent(tag)}`}
+                className="text-sm px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
               >
-                <FolderOpen className="w-3 h-3" />
-                {category.name}
+                {tag}
               </Link>
             ))}
           </div>
         )}
       </div>
 
-      {post.tags && post.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          {post.tags.map((tag, index) => (
-            <Link
-              key={index}
-              href={`/blog/tag/${encodeURIComponent(tag)}`}
-              className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-            >
-              <Tag className="w-3 h-3" />
-              {tag}
-            </Link>
+      {/* Row 2: Category Breadcrumbs */}
+      {post.categories && post.categories.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1 mb-6">
+          <Link
+            href="/blog"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Blog
+          </Link>
+          {post.categories.map((category, index) => (
+            <span key={category.id} className="flex items-center gap-1">
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              <Link
+                href={`/blog/category/${category.slug}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {category.name}
+              </Link>
+            </span>
           ))}
         </div>
       )}
 
+      {/* Excerpt */}
       {post.excerpt && (
-        <p className="text-lg text-muted-foreground italic border-l-4 border-primary/50 pl-4">
+        <p className="text-lg text-muted-foreground italic border-l-4 border-primary/50 pl-4 mb-6">
           {post.excerpt}
         </p>
       )}
 
-      <hr className="mt-8 border-border" />
+      <hr className="border-border" />
     </header>
   )
 }
