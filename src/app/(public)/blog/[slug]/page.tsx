@@ -66,14 +66,14 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <article className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+    <article className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="flex flex-col items-center">
+        <div className="w-full">
           <PostMeta post={post} />
           <PostContent content={post.content} />
         </div>
 
-        <aside className="lg:col-span-1">
+        <aside className="w-full mt-12">
           <Sidebar categories={categories} />
         </aside>
       </div>
