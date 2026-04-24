@@ -51,7 +51,6 @@ export interface Post {
   author: Author
   categories?: Category[]
   tags?: string[]
-  featured: boolean
   updatedAt: string
   createdAt: string
 }

@@ -163,7 +163,7 @@ export interface Post {
   id: number;
   title: string;
   /**
-   * URL-friendly version of the title
+   * Auto-generated from title, but you can edit it
    */
   slug: string;
   /**
@@ -194,7 +194,6 @@ export interface Post {
    * Enter tags and press Enter
    */
   tags?: string[] | null;
-  featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -295,7 +294,7 @@ export interface Category {
   id: number;
   name: string;
   /**
-   * URL-friendly version of the name
+   * Auto-generated from name, but you can edit it
    */
   slug: string;
   description?: string | null;
@@ -430,7 +429,6 @@ export interface PostsSelect<T extends boolean = true> {
   author?: T;
   categories?: T;
   tags?: T;
-  featured?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

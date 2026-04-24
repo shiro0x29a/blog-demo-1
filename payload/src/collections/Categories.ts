@@ -1,5 +1,14 @@
 import type { CollectionConfig } from 'payload'
 
+const formatSlug = (val: string): string => {
+  return val
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim()
+}
+
 export const Categories: CollectionConfig = {
   slug: 'categories',
   admin: {
@@ -22,7 +31,17 @@ export const Categories: CollectionConfig = {
       required: true,
       unique: true,
       admin: {
-        description: 'URL-friendly version of the name',
+        description: 'Auto-generated from name, but you can edit it',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            if (!value && data?.name) {
+              return formatSlug(data.name)
+            }
+            return value
+          },
+        ],
       },
     },
     {

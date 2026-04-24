@@ -65,7 +65,7 @@ const Header = () => {
               {t("navigation.about")}
             </Link>
             <Link
-              href="/blog"
+              href="/blog/news"
               className={cn(
                 "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 pathname?.startsWith("/blog")
@@ -161,7 +161,7 @@ const Header = () => {
                 {t("navigation.about")}
               </Link>
               <Link
-                href="/blog"
+                href="/blog/news"
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
                   "rounded-md px-3 py-2 text-sm font-medium transition-colors",

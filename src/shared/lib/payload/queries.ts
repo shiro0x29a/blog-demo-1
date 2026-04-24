@@ -8,7 +8,6 @@ export async function getPosts(params?: {
   limit?: number
   category?: string
   tag?: string
-  featured?: boolean
   sort?: string
 }) {
   const page = params?.page && !isNaN(params.page) ? params.page : 1
@@ -22,19 +21,13 @@ export async function getPosts(params?: {
 
   if (params?.category) {
     where.categories = {
-      contains: params.category,
+      in: [params.category],
     }
   }
 
   if (params?.tag) {
     where.tags = {
       contains: params.tag,
-    }
-  }
-
-  if (params?.featured !== undefined) {
-    where.featured = {
-      equals: params.featured,
     }
   }
 
@@ -104,25 +97,6 @@ export async function getAuthors() {
   })
 
   return authors.docs
-}
-
-export async function getFeaturedPosts(limit: number = 3) {
-  const posts = await payload.find({
-    collection: 'posts',
-    limit,
-    depth: 2,
-    sort: '-publishedAt',
-    where: {
-      featured: {
-        equals: true,
-      },
-      status: {
-        equals: 'published',
-      },
-    },
-  })
-
-  return posts.docs
 }
 
 export async function getRecentPosts(limit: number = 5) {

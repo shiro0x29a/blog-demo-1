@@ -1,5 +1,14 @@
 import type { CollectionConfig } from 'payload'
 
+const formatSlug = (val: string): string => {
+  return val
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim()
+}
+
 export const Posts: CollectionConfig = {
   slug: 'posts',
   admin: {
@@ -33,7 +42,17 @@ export const Posts: CollectionConfig = {
       required: true,
       unique: true,
       admin: {
-        description: 'URL-friendly version of the title',
+        description: 'Auto-generated from title, but you can edit it',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            if (!value && data?.title) {
+              return formatSlug(data.title)
+            }
+            return value
+          },
+        ],
       },
     },
     {
@@ -104,14 +123,6 @@ export const Posts: CollectionConfig = {
       required: false,
       admin: {
         description: 'Enter tags and press Enter',
-      },
-    },
-    {
-      name: 'featured',
-      type: 'checkbox',
-      defaultValue: false,
-      admin: {
-        position: 'sidebar',
       },
     },
   ],
