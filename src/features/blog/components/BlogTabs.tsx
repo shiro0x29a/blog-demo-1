@@ -15,7 +15,7 @@ export function BlogTabs() {
 
   return (
     <div className="mb-8">
-      <div className="flex gap-1 justify-center">
+      <div className="flex justify-center">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href
           return (
@@ -23,7 +23,7 @@ export function BlogTabs() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                'px-4 py-3 text-sm font-medium transition-colors border-b-2',
+                'px-4 py-3 text-sm font-medium transition-colors border-b-[3px]',
                 isActive
                   ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted'
