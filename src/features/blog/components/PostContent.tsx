@@ -45,7 +45,12 @@ export function PostContent({ content }: PostContentProps) {
         prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:bg-muted/50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic
         prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
         prose-pre:bg-muted prose-pre:rounded-lg prose-pre:p-4
-        prose-hr:my-8"
+        prose-hr:my-8
+        [&_.quote-block]:mt-[18px] [&_.quote-block]:mr-[21px] [&_.quote-block]:mb-[16px] [&_.quote-block]:ml-0
+        [&_.quote-block]:pl-[15px]
+        [&_.quote-block]:border-l-4 [&_.quote-block]:border-foreground 
+        [&_.quote-block]:bg-muted/30 [&_.quote-block]:italic [&_.quote-block]:rounded
+        dark:[&_.quote-block]:border-muted-foreground"
       dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   )
@@ -87,17 +92,43 @@ function processNode(node: any): string {
   }
 
   if (node.type === 'paragraph') {
-    html = `<p>${node.children ? node.children.map(processNode).join('') : ''}</p>`
+    html = `<p style="margin: 0 21px 12px; word-wrap: break-word; line-height: 1.6;">${node.children ? node.children.map(processNode).join('') : ''}</p>`
   } else if (node.type === 'heading') {
-    const tag = `h${node.tag || 2}`
-    html = `<${tag}>${node.children ? node.children.map(processNode).join('') : ''}</${tag}>`
+    // Извлекаем уровень заголовка из node.tag (может быть 'h1', 'h2', и т.д.)
+    let level = 2 // по умолчанию h2
+    if (node.tag) {
+      // Если tag уже содержит 'h', извлекаем число
+      const match = node.tag.toString().match(/\d+/)
+      if (match) {
+        level = parseInt(match[0])
+      }
+    }
+    const tag = `h${level}`
+    html = `<${tag} style="margin: 18px 21px 9px; word-wrap: break-word; line-height: 1.4;">${node.children ? node.children.map(processNode).join('') : ''}</${tag}>`
   } else if (node.type === 'list') {
     const listTag = node.listType === 'bullet' ? 'ul' : 'ol'
     html = `<${listTag}>${node.children ? node.children.map(processNode).join('') : ''}</${listTag}>`
   } else if (node.type === 'listitem') {
     html = `<li>${node.children ? node.children.map(processNode).join('') : ''}</li>`
   } else if (node.type === 'quote') {
-    html = `<blockquote>${node.children ? node.children.map(processNode).join('') : ''}</blockquote>`
+    html = `<blockquote class="quote-block">${node.children ? node.children.map(processNode).join('') : ''}</blockquote>`
+  } else if (node.type === 'upload') {
+    // Handle image uploads
+    const value = node.value
+    if (value && value.url) {
+      const alt = value.alt || value.title || 'Image'
+      html = `<div style="display: flex; justify-content: center; margin: 1.5rem 0;"><img src="${value.url}" alt="${alt}" style="max-width: 736px; max-height: 736px; width: auto; height: auto;" /></div>`
+    }
+  } else if (node.type === 'link') {
+    // Handle links
+    const url = node.url || node.fields?.url || '#'
+    const linkText = node.children ? node.children.map(processNode).join('') : ''
+    html = `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`
+  } else if (node.type === 'autolink') {
+    // Handle autolinks
+    const url = node.url || node.fields?.url || '#'
+    const linkText = node.children ? node.children.map(processNode).join('') : url
+    html = `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`
   } else if (node.type === 'text') {
     let text = node.text || ''
 
