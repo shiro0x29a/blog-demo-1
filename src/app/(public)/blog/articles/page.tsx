@@ -1,8 +1,7 @@
 import { getPosts, getCategoryBySlug } from '@/shared/lib/payload/queries'
-import { PostCard } from '@/features/blog/components/PostCard'
-import { Pagination } from '@/features/blog/components/Pagination'
 import { BlogTabs } from '@/features/blog/components/BlogTabs'
 import { BlogSearch } from '@/features/blog/components/BlogSearch'
+import { BlogPostsClient } from '@/features/blog/components/BlogPostsClient'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
@@ -18,18 +17,22 @@ interface ArticlesPageProps {
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const { page } = await searchParams
   const currentPage = parseInt(page || '1', 10)
-  const limit = 9
+  const limit = 10
 
   // Get the USEFUL ARTICLES category
   const articlesCategory = await getCategoryBySlug('articles')
   
-  const posts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id })
+  // Получаем все посты для тегов и фильтрации
+  const allPosts = await getPosts({ page: 1, limit: 1000, category: articlesCategory?.id })
+  
+  // Получаем посты для текущей страницы (для пагинации без фильтров)
+  const paginatedPosts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id })
 
-  if (!posts) {
+  if (!allPosts || !paginatedPosts) {
     notFound()
   }
 
-  const totalPages = Math.ceil(posts.totalDocs / limit)
+  const totalPages = Math.ceil(paginatedPosts.totalDocs / limit)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -44,34 +47,14 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
 
       <BlogTabs />
 
-      <div className="max-w-5xl mx-auto">
-        {posts.docs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              No posts found. Check back soon!
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {posts.docs.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-
-            {totalPages > 1 && (
-              <div className="mt-8">
-                <Pagination
-                  currentPage={posts.page}
-                  totalPages={totalPages}
-                  hasNextPage={posts.hasNextPage}
-                  hasPrevPage={posts.hasPrevPage}
-                />
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      <BlogPostsClient
+        allPosts={allPosts.docs}
+        paginatedPosts={paginatedPosts.docs}
+        currentPage={paginatedPosts.page}
+        totalPages={totalPages}
+        hasNextPage={paginatedPosts.hasNextPage}
+        hasPrevPage={paginatedPosts.hasPrevPage}
+      />
     </div>
   )
 }
