@@ -53,7 +53,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-border mt-8 border-t pt-8">
+        <div className="border-border mt-8 border-t pt-8 text-center">
           <p className="text-muted-foreground text-sm">
             &copy; {currentYear} {siteConfig.appName}. All rights reserved.
           </p>
