@@ -2,6 +2,7 @@ import { getPosts, getCategoryBySlug } from '@/shared/lib/payload/queries'
 import { PostCard } from '@/features/blog/components/PostCard'
 import { Pagination } from '@/features/blog/components/Pagination'
 import { BlogTabs } from '@/features/blog/components/BlogTabs'
+import { BlogSearch } from '@/features/blog/components/BlogSearch'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
@@ -38,6 +39,8 @@ export default async function FaqPage({ searchParams }: FaqPageProps) {
           Frequently asked questions and answers
         </p>
       </div>
+
+      <BlogSearch />
 
       <BlogTabs />
 

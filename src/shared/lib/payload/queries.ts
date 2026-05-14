@@ -8,6 +8,7 @@ export async function getPosts(params?: {
   limit?: number
   category?: string
   tag?: string
+  search?: string
   sort?: string
 }) {
   const page = params?.page && !isNaN(params.page) ? params.page : 1
@@ -31,9 +32,24 @@ export async function getPosts(params?: {
     }
   }
 
+  if (params?.search) {
+    where.or = [
+      {
+        title: {
+          contains: params.search,
+        },
+      },
+      {
+        excerpt: {
+          contains: params.search,
+        },
+      },
+    ]
+  }
+
   const sort = params?.sort || '-publishedAt'
 
-  console.log('[getPosts] params:', { page, limit, category: params?.category, where })
+  console.log('[getPosts] params:', { page, limit, category: params?.category, search: params?.search, where })
 
   const posts = await payload.find({
     collection: 'posts',

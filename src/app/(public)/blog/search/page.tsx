@@ -1,4 +1,4 @@
-import { getPosts, getCategoryBySlug } from '@/shared/lib/payload/queries'
+import { getPosts } from '@/shared/lib/payload/queries'
 import { PostCard } from '@/features/blog/components/PostCard'
 import { Pagination } from '@/features/blog/components/Pagination'
 import { BlogTabs } from '@/features/blog/components/BlogTabs'
@@ -7,23 +7,46 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'News - Blog',
-  description: 'Read our latest news articles and updates',
+  title: 'Search - Blog',
+  description: 'Search blog posts',
 }
 
-interface NewsPageProps {
-  searchParams: Promise<{ page?: string }>
+interface SearchPageProps {
+  searchParams: Promise<{ q?: string; page?: string }>
 }
 
-export default async function NewsPage({ searchParams }: NewsPageProps) {
-  const { page } = await searchParams
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const { q, page } = await searchParams
+  const query = q || ''
   const currentPage = parseInt(page || '1', 10)
   const limit = 9
 
-  // Get the NEWS category
-  const newsCategory = await getCategoryBySlug('news')
-  
-  const posts = await getPosts({ page: currentPage, limit, category: newsCategory?.id })
+  if (!query) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold mb-2">Search</h1>
+          <p className="text-muted-foreground">
+            Search for articles, news, and FAQs
+          </p>
+        </div>
+
+        <BlogSearch />
+
+        <BlogTabs />
+
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              Enter a search query to find articles
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const posts = await getPosts({ page: currentPage, limit, search: query })
 
   if (!posts) {
     notFound()
@@ -34,9 +57,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">News</h1>
+        <h1 className="text-4xl font-bold mb-2">Search Results</h1>
         <p className="text-muted-foreground">
-          Read our latest news articles and updates
+          Found {posts.totalDocs} result{posts.totalDocs !== 1 ? 's' : ''} for &quot;{query}&quot;
         </p>
       </div>
 
@@ -47,8 +70,11 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       <div className="max-w-5xl mx-auto">
         {posts.docs.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              No posts found. Check back soon!
+            <p className="text-muted-foreground text-lg mb-2">
+              No results found for &quot;{query}&quot;
+            </p>
+            <p className="text-muted-foreground text-sm">
+              Try different keywords or browse our categories
             </p>
           </div>
         ) : (
