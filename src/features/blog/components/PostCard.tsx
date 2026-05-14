@@ -21,18 +21,6 @@ export function PostCard({ post }: PostCardProps) {
       )}
 
       <div className="p-6">
-        <div className="flex flex-wrap gap-2 mb-3">
-          {post.categories?.slice(0, 2).map((category) => (
-            <Link
-              key={category.id}
-              href={`/blog/category/${category.slug}`}
-              className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-            >
-              {category.name}
-            </Link>
-          ))}
-        </div>
-
         <Link href={`/blog/${post.slug}`} className="block">
           <h2 className="text-xl font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {post.title}
