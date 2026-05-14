@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Menu, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, ChevronLeft, ChevronRight, Database } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { useLanguage, getTranslations, useTranslations } from "@/features/i18n";
 import { siteConfig } from "@/shared/lib/config/site";
@@ -241,6 +241,11 @@ export const Sidebar = () => {
       label: t("navigation.dashboard"),
       href: "/dashboard",
       icon: LayoutDashboard,
+    },
+    {
+      label: "Payload",
+      href: "/admin",
+      icon: Database,
     },
   ];
 
