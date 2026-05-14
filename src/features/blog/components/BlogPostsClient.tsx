@@ -30,7 +30,9 @@ export function BlogPostsClient({
     const tagsSet = new Set<string>()
     allPosts.forEach((post) => {
       post.tags?.forEach((tag) => {
-        if (tag) tagsSet.add(tag)
+        if (tag && typeof tag === 'object' && 'name' in tag) {
+          tagsSet.add(tag.name)
+        }
       })
     })
     return Array.from(tagsSet).sort()
@@ -43,7 +45,10 @@ export function BlogPostsClient({
     }
     return allPosts.filter((post) => {
       if (!post.tags || post.tags.length === 0) return false
-      return selectedTags.every((tag) => post.tags?.includes(tag))
+      const postTagNames = post.tags.map(tag => 
+        typeof tag === 'object' && 'name' in tag ? tag.name : ''
+      ).filter(Boolean)
+      return selectedTags.every((tag) => postTagNames.includes(tag))
     })
   }, [allPosts, paginatedPosts, selectedTags])
 

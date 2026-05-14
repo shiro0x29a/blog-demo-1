@@ -118,11 +118,12 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'tags',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'tags',
       hasMany: true,
       required: false,
       admin: {
-        description: 'Enter tags and press Enter',
+        description: 'Select or create tags',
       },
     },
   ],

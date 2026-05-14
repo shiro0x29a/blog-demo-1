@@ -4,6 +4,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Users } from './src/collections/Users'
 import { Posts } from './src/collections/Posts'
 import { Categories } from './src/collections/Categories'
+import { Tags } from './src/collections/Tags'
 import { Media } from './src/collections/Media'
 import { Authors } from './src/collections/Authors'
 import { Header } from './src/globals/Header'
@@ -21,7 +22,7 @@ export default buildConfig({
       titleSuffix: '- Blog Admin',
     },
   },
-  collections: [Users, Posts, Categories, Media, Authors],
+  collections: [Users, Posts, Categories, Tags, Media, Authors],
   globals: [Header, Footer],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || '',

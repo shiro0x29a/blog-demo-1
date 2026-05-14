@@ -59,13 +59,13 @@ export function PostMeta({ post }: PostMetaProps) {
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
             <Tag className="w-4 h-4 text-muted-foreground" />
-            {post.tags.map((tag, index) => (
+            {post.tags.map((tag) => (
               <Link
-                key={index}
-                href={`/blog/tag/${encodeURIComponent(tag)}`}
+                key={tag.id}
+                href={`/blog/tag/${encodeURIComponent(tag.name)}`}
                 className="text-sm px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
               >
-                {tag}
+                {tag.name}
               </Link>
             ))}
           </div>

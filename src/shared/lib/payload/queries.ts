@@ -27,8 +27,21 @@ export async function getPosts(params?: {
   }
 
   if (params?.tag) {
-    where.tags = {
-      contains: params.tag,
+    // Сначала найдем тег по имени
+    const tags = await payload.find({
+      collection: 'tags',
+      where: {
+        name: {
+          equals: params.tag,
+        },
+      },
+      limit: 1,
+    })
+    
+    if (tags.docs.length > 0) {
+      where.tags = {
+        in: [tags.docs[0].id],
+      }
     }
   }
 

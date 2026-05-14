@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     posts: Post;
     categories: Category;
+    tags: Tag;
     media: Media;
     authors: Author;
     'payload-kv': PayloadKv;
@@ -82,6 +83,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -191,9 +193,9 @@ export interface Post {
   author: number | Author;
   categories?: (number | Category)[] | null;
   /**
-   * Enter tags and press Enter
+   * Select or create tags
    */
-  tags?: string[] | null;
+  tags?: (number | Tag)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -307,6 +309,19 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  /**
+   * Tag name
+   */
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -340,6 +355,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: number | Tag;
       } | null)
     | ({
         relationTo: 'media';
@@ -442,6 +461,15 @@ export interface CategoriesSelect<T extends boolean = true> {
   slug?: T;
   description?: T;
   icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

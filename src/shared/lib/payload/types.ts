@@ -23,6 +23,13 @@ export interface Category {
   createdAt: string
 }
 
+export interface Tag {
+  id: string
+  name: string
+  updatedAt: string
+  createdAt: string
+}
+
 export interface Media {
   id: string
   title: string
@@ -50,7 +57,7 @@ export interface Post {
   publishedAt?: string
   author: Author
   categories?: Category[]
-  tags?: string[]
+  tags?: Tag[]
   updatedAt: string
   createdAt: string
 }
