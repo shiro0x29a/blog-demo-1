@@ -28,7 +28,7 @@ export function PostMeta({ post }: PostMetaProps) {
       <div className="flex flex-wrap items-center gap-4 mb-4">
         {/* Author */}
         <div className="flex items-center gap-2 text-muted-foreground">
-          <User className="w-4 h-4" />
+          {!post.author.avatar && <User className="w-4 h-4" />}
           {post.author.avatar && (
             <Image
               src={post.author.avatar.thumbnail || post.author.avatar.url}
