@@ -40,13 +40,18 @@ export function Footer() {
             <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">Blog</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/blog" className="text-muted-foreground text-sm hover:text-foreground">
-                  All Posts
+                <Link href="/blog/news" className="text-muted-foreground text-sm hover:text-foreground">
+                  News
                 </Link>
               </li>
               <li>
-                <Link href="/blog/rss.xml" className="text-muted-foreground text-sm hover:text-foreground">
-                  RSS Feed
+                <Link href="/blog/faq" className="text-muted-foreground text-sm hover:text-foreground">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/articles" className="text-muted-foreground text-sm hover:text-foreground">
+                  Useful Articles
                 </Link>
               </li>
             </ul>
