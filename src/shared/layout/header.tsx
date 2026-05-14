@@ -75,19 +75,6 @@ const Header = () => {
             >
               Blog
             </Link>
-            {user && (
-              <Link
-                href="/dashboard"
-                className={cn(
-                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  pathname?.startsWith("/dashboard")
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                )}
-              >
-                {t("navigation.dashboard")}
-              </Link>
-            )}
           </nav>
 
           <div className="z-10 hidden items-center gap-2 md:flex">
@@ -98,12 +85,12 @@ const Header = () => {
 
             {user ? (
               <div className="flex items-center gap-2">
-                <div className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2">
+                <Link href="/dashboard" className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted transition-colors">
                   <div className="bg-primary h-2 w-2 shrink-0 rounded-full" />
                   <span className="text-muted-foreground max-w-[120px] truncate text-xs">
                     {user.email}
                   </span>
-                </div>
+                </Link>
                 <Button variant="outline" size="sm" className="h-8 text-xs" onClick={logout}>
                   {t("navigation.logout")}
                 </Button>
@@ -172,29 +159,19 @@ const Header = () => {
               >
                 Blog
               </Link>
-              {user && (
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    pathname?.startsWith("/dashboard")
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                >
-                  {t("navigation.dashboard")}
-                </Link>
-              )}
             </nav>
 
             <div className="border-border border-t pt-3">
               {user ? (
                 <div className="space-y-3">
-                  <div className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2">
+                  <Link 
+                    href="/dashboard" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted transition-colors"
+                  >
                     <div className="bg-primary h-2 w-2 shrink-0 rounded-full" />
                     <span className="text-muted-foreground truncate text-xs">{user.email}</span>
-                  </div>
+                  </Link>
                   <Button
                     variant="outline"
                     size="sm"
