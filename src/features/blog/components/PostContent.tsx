@@ -2,7 +2,8 @@
 
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import type { HTMLConverters } from '@payloadcms/richtext-lexical/html'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { Copy, Check } from 'lucide-react'
 
 interface PostContentProps {
   content: any
@@ -10,6 +11,7 @@ interface PostContentProps {
 
 export function PostContent({ content }: PostContentProps) {
   const [htmlContent, setHtmlContent] = useState<string>('')
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (content && content.root) {
@@ -96,12 +98,12 @@ export function PostContent({ content }: PostContentProps) {
         // Цитаты (поддержка обоих типов: blockquote и quote)
         blockquote: ({ node, nodesToHTML, providedStyleTag }) => {
           const children = nodesToHTML({ nodes: node.children }).join('')
-          return `<blockquote${providedStyleTag} class="quote-block">${children}</blockquote>`
+          return `<blockquote${providedStyleTag} class="quote-block" style="background-color: light-dark(rgb(245, 245, 245), rgb(41, 41, 41));">${children}</blockquote>`
         },
         
         quote: ({ node, nodesToHTML, providedStyleTag }) => {
           const children = nodesToHTML({ nodes: node.children }).join('')
-          return `<blockquote${providedStyleTag} class="quote-block">${children}</blockquote>`
+          return `<blockquote${providedStyleTag} class="quote-block" style="background-color: light-dark(rgb(245, 245, 245), rgb(41, 41, 41));">${children}</blockquote>`
         },
 
         // Relationship (ссылки на пользователей/авторов)
@@ -141,6 +143,17 @@ export function PostContent({ content }: PostContentProps) {
           return `<hr${providedStyleTag} style="margin: 24px 21px; border: none; border-top: 2px solid currentColor; opacity: 0.2;" />`
         },
 
+        // Блоки кода (code blocks)
+        code: ({ node, nodesToHTML, providedStyleTag }) => {
+          const children = nodesToHTML({ nodes: node.children }).join('')
+          const language = node.language || 'text'
+          
+          return `<div${providedStyleTag} style="margin: 16px 21px; border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);">
+            <div style="padding: 8px 16px; background: rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 12px; color: rgba(0,0,0,0.6); font-family: monospace;">${language}</div>
+            <pre style="margin: 0; padding: 16px; overflow-x: auto;"><code style="font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; color: inherit;">${children}</code></pre>
+          </div>`
+        },
+
         // Inline code с стилями
         text: ({ node }) => {
           let text = node.text || ''
@@ -153,12 +166,27 @@ export function PostContent({ content }: PostContentProps) {
           if (node.format & 2) text = `<em>${text}</em>` // IS_ITALIC = 2
           if (node.format & 4) text = `<span style="text-decoration: line-through;">${text}</span>` // IS_STRIKETHROUGH = 4
           if (node.format & 8) text = `<span style="text-decoration: underline;">${text}</span>` // IS_UNDERLINE = 8
-          if (node.format & 16) text = `<code style="background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">${text}</code>` // IS_CODE = 16
+          if (node.format & 16) text = `<code class="inline-code" style="background-color: light-dark(rgb(245, 245, 245), rgb(41, 41, 41));">${text}</code>` // IS_CODE = 16
           if (node.format & 32) text = `<sub>${text}</sub>` // IS_SUBSCRIPT = 32
           if (node.format & 64) text = `<sup>${text}</sup>` // IS_SUPERSCRIPT = 64
           if (node.format & 128) text = `<mark style="background: yellow; padding: 2px 4px;">${text}</mark>` // IS_HIGHLIGHT = 128
           
           return text
+        },
+
+        // Блоки (blocks) - для кастомных блоков
+        blocks: {
+          code: ({ node }) => {
+            const language = node.fields?.language || 'text'
+            const code = node.fields?.code || ''
+            // Экранируем HTML в коде
+            const escapedCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            
+            return `<div class="code-block-wrapper" style="margin: 16px 21px;">
+              <div class="code-block-header" style="background-color: color-mix(in oklab, var(--muted) 100%, transparent);">${language}</div>
+              <pre class="code-block-pre" style="background-color: color-mix(in oklab, var(--muted) 50%, transparent);"><code class="code-block-code">${escapedCode}</code></pre>
+            </div>`
+          },
         },
       }
 
@@ -171,12 +199,71 @@ export function PostContent({ content }: PostContentProps) {
     }
   }, [content])
 
+  // Добавляем кнопки копирования к блокам кода после рендеринга
+  useEffect(() => {
+    if (!contentRef.current) return
+
+    const codeBlocks = contentRef.current.querySelectorAll('.code-block-wrapper')
+    
+    codeBlocks.forEach((block) => {
+      const header = block.querySelector('.code-block-header')
+      const codeElement = block.querySelector('.code-block-code')
+      
+      if (!header || !codeElement) return
+      
+      // Проверяем, не добавлена ли уже кнопка
+      if (header.querySelector('.copy-button')) return
+      
+      const code = codeElement.textContent || ''
+      
+      // Создаем кнопку копирования
+      const button = document.createElement('button')
+      button.className = 'copy-button flex items-center gap-1 px-2 py-1 rounded hover:bg-muted transition-colors text-xs ml-auto'
+      button.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+        </svg>
+        <span>Copy</span>
+      `
+      
+      button.onclick = async () => {
+        await navigator.clipboard.writeText(code)
+        button.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Copied!</span>
+        `
+        setTimeout(() => {
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+            <span>Copy</span>
+          `
+        }, 2000)
+      }
+      
+      // Делаем header flex контейнером
+      if (header instanceof HTMLElement) {
+        header.style.display = 'flex'
+        header.style.alignItems = 'center'
+        header.style.justifyContent = 'space-between'
+      }
+      
+      header.appendChild(button)
+    })
+  }, [htmlContent])
+
   if (!htmlContent) {
     return null
   }
 
   return (
     <div
+      ref={contentRef}
       className="prose prose-lg dark:prose-invert max-w-none
         prose-headings:font-bold prose-headings:mb-4 prose-headings:mt-6
         prose-h1:text-4xl prose-h1:mt-8
@@ -196,10 +283,22 @@ export function PostContent({ content }: PostContentProps) {
         [&_.quote-block]:mt-[18px] [&_.quote-block]:mr-[21px] [&_.quote-block]:mb-[16px] [&_.quote-block]:ml-0
         [&_.quote-block]:pl-[15px]
         [&_.quote-block]:border-l-4 [&_.quote-block]:border-foreground 
-        [&_.quote-block]:bg-muted/30 [&_.quote-block]:italic [&_.quote-block]:rounded
+        [&_.quote-block]:italic [&_.quote-block]:rounded
+        [&_.quote-block]:bg-[rgb(229,229,229)] dark:[&_.quote-block]:bg-[rgb(41,41,41)]
         dark:[&_.quote-block]:border-muted-foreground
         [&_.horizontal-rule]:border-none [&_.horizontal-rule]:border-t-2 [&_.horizontal-rule]:border-foreground/20
-        dark:[&_.horizontal-rule]:border-muted-foreground/30"
+        dark:[&_.horizontal-rule]:border-muted-foreground/30
+        [&_.inline-code]:px-1.5 [&_.inline-code]:py-0.5 
+        [&_.inline-code]:rounded [&_.inline-code]:border [&_.inline-code]:border-border
+        [&_.inline-code]:font-mono [&_.inline-code]:text-sm
+        [&_.inline-code]:bg-[rgb(229,229,229)] dark:[&_.inline-code]:bg-[rgb(41,41,41)]
+        [&_.code-block-wrapper]:rounded-lg [&_.code-block-wrapper]:overflow-hidden 
+        [&_.code-block-wrapper]:border [&_.code-block-wrapper]:border-border
+        [&_.code-block-header]:px-4 [&_.code-block-header]:py-2
+        [&_.code-block-header]:border-b-2 [&_.code-block-header]:border-border
+        [&_.code-block-header]:text-xs [&_.code-block-header]:text-muted-foreground [&_.code-block-header]:font-mono
+        [&_.code-block-pre]:m-0 [&_.code-block-pre]:p-4 [&_.code-block-pre]:overflow-x-auto
+        [&_.code-block-code]:font-mono [&_.code-block-code]:text-sm [&_.code-block-code]:leading-relaxed"
       dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   )

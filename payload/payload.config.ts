@@ -1,6 +1,7 @@
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { BlocksFeature } from '@payloadcms/richtext-lexical'
 import { Users } from './src/collections/Users'
 import { Posts } from './src/collections/Posts'
 import { Categories } from './src/collections/Categories'
@@ -24,7 +25,40 @@ export default buildConfig({
   },
   collections: [Users, Posts, Categories, Tags, Media, Authors],
   globals: [Header, Footer],
-  editor: lexicalEditor({}),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      BlocksFeature({
+        blocks: [
+          {
+            slug: 'code',
+            fields: [
+              {
+                name: 'language',
+                type: 'select',
+                defaultValue: 'javascript',
+                options: [
+                  { label: 'JavaScript', value: 'javascript' },
+                  { label: 'TypeScript', value: 'typescript' },
+                  { label: 'Python', value: 'python' },
+                  { label: 'HTML', value: 'html' },
+                  { label: 'CSS', value: 'css' },
+                  { label: 'JSON', value: 'json' },
+                  { label: 'Bash', value: 'bash' },
+                  { label: 'Text', value: 'text' },
+                ],
+              },
+              {
+                name: 'code',
+                type: 'textarea',
+                required: true,
+              },
+            ],
+          },
+        ],
+      }),
+    ],
+  }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
