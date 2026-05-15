@@ -41,7 +41,7 @@ const Header = () => {
             </Link>
           </div>
 
-          <nav className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 md:flex">
+          <nav className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 lg:flex">
             <Link
               href="/"
               className={cn(
@@ -77,7 +77,7 @@ const Header = () => {
             </Link>
           </nav>
 
-          <div className="z-10 hidden items-center gap-2 md:flex">
+          <div className="z-10 hidden items-center gap-2 lg:flex">
             <div className="border-border mr-2 flex items-center gap-1 border-r pr-2">
               <ThemeSwitcher />
               <LanguageSwitcher />
@@ -104,7 +104,7 @@ const Header = () => {
             )}
           </div>
 
-          <div className="z-10 flex items-center gap-2 md:hidden">
+          <div className="z-10 flex items-center gap-2 lg:hidden">
             <ThemeSwitcher />
             <LanguageSwitcher />
             <Button
@@ -120,7 +120,7 @@ const Header = () => {
       </div>
 
       {mobileMenuOpen && (
-        <div className="border-border bg-background border-t md:hidden">
+        <div className="border-border bg-background border-t lg:hidden">
           <div className="mx-auto max-w-7xl space-y-3 px-4 py-4">
             <nav className="flex flex-col gap-1">
               <Link
