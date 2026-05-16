@@ -160,6 +160,23 @@
   align-items: center;
 }
 
+.postContent :global(.copy-button) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.postContent :global(.copy-button:hover) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 .postContent :global(.code-block-pre) {
   margin: 0;
   padding: 16px;

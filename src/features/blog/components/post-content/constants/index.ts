@@ -7,7 +7,7 @@ export const ALLOWED_HTML_TAGS = [
 export const ALLOWED_HTML_ATTRIBUTES = [
   'class', 'id', 'href', 'src', 'alt', 'title', 'target',
   'rel', 'aria-checked', 'role', 'tabindex', 'for', 'type', 'checked',
-  'data-code-block', 'data-code-content'
+  'data-code-block', 'data-code-content', 'data-code-component', 'data-code-container'
 ] as const
 
 export const TEXT_FORMAT_FLAGS = {

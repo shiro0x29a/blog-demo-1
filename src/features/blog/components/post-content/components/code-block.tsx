@@ -1,76 +1,47 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { Check, Copy } from 'lucide-react'
 
 interface CodeBlockRendererProps {
-  element: Element
   language: string
   code: string
 }
 
-export function CodeBlockRenderer({ element, language, code }: CodeBlockRendererProps) {
+export function CodeBlockRenderer({ language, code }: CodeBlockRendererProps) {
   const [copied, setCopied] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error('Failed to copy code:', err)
-    }
+    await navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
-  useEffect(() => {
-    if (!containerRef.current || !element.parentNode) return
-
-    // Создаем обертку для блока кода
-    const wrapper = document.createElement('div')
-    wrapper.className = 'code-block-wrapper'
-    
-    // Создаем хедер с языком и кнопкой копирования
-    const header = document.createElement('div')
-    header.className = 'code-block-header'
-    
-    const languageSpan = document.createElement('span')
-    languageSpan.className = 'code-block-language'
-    languageSpan.textContent = language
-    
-    const copyContainer = document.createElement('div')
-    copyContainer.className = 'copy-button-container'
-    
-    const copyButton = document.createElement('button')
-    copyButton.textContent = copied ? 'Copied!' : 'Copy'
-    copyButton.onclick = handleCopy
-    copyButton.style.cssText = `
-      padding: 4px 8px;
-      background: transparent;
-      border: 1px solid rgba(0,0,0,0.2);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    `
-    copyContainer.appendChild(copyButton)
-    
-    header.appendChild(languageSpan)
-    header.appendChild(copyContainer)
-    
-    // Создаем pre блок
-    const pre = document.createElement('pre')
-    pre.className = 'code-block-pre'
-    
-    const codeBlock = document.createElement('code')
-    codeBlock.className = 'code-block-code'
-    codeBlock.textContent = code
-    
-    pre.appendChild(codeBlock)
-    wrapper.appendChild(header)
-    wrapper.appendChild(pre)
-    
-    // Заменяем маркер на блок кода
-    element.parentNode.replaceChild(wrapper, element)
-  }, [element, language, code, copied])
-
-  return <div ref={containerRef} />
+  return (
+    <div className="code-block-wrapper">
+      <div className="code-block-header">
+        <span className="code-block-language">{language}</span>
+        <button
+          onClick={handleCopy}
+          className="copy-button"
+          aria-label="Copy code"
+        >
+          {copied ? (
+            <>
+              <Check className="h-3 w-3" />
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className="h-3 w-3" />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="code-block-pre">
+        <code className="code-block-code">{code}</code>
+      </pre>
+    </div>
+  )
 }
