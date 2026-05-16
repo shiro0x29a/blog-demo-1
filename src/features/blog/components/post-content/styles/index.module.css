@@ -1,0 +1,227 @@
+/* PostContent.module.css */
+
+.postContent {
+  max-width: none;
+  word-wrap: break-word;
+}
+
+/* Параграфы */
+.postContent :global(.post-paragraph) {
+  margin: 0 21px 12px;
+  line-height: 1.6;
+}
+
+/* Заголовки */
+.postContent :global(.post-heading) {
+  font-weight: bold;
+  margin: 18px 21px 9px;
+  line-height: 1.4;
+}
+
+.postContent :global(.post-heading-h1) {
+  font-size: 2.25rem;
+  margin-top: 2rem;
+}
+
+.postContent :global(.post-heading-h2) {
+  font-size: 1.875rem;
+  margin-top: 2rem;
+}
+
+.postContent :global(.post-heading-h3) {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.postContent :global(.post-heading-h4) {
+  font-size: 1.25rem;
+}
+
+/* Списки */
+.postContent :global(.post-list) {
+  margin: 0 21px 12px;
+}
+
+.postContent :global(.post-list-bullet) {
+  padding-left: 40px;
+  list-style-type: disc;
+}
+
+.postContent :global(.post-list-number) {
+  padding-left: 40px;
+  list-style-type: decimal;
+}
+
+.postContent :global(.post-list-check) {
+  padding-left: 21px;
+  list-style-type: none;
+}
+
+.postContent :global(.post-list-item) {
+  margin: 4px 0;
+}
+
+.postContent :global(.post-list-item-nested) {
+  list-style-type: none;
+}
+
+/* Чекбоксы */
+.postContent :global(.post-list-item-checkbox) {
+  list-style-type: none;
+  margin: 4px 0;
+}
+
+.postContent :global(.post-checkbox) {
+  margin-right: 8px;
+}
+
+.postContent :global(.post-checkbox-label) {
+  cursor: pointer;
+}
+
+/* Изображения */
+.postContent :global(.post-image-wrapper) {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.postContent :global(.post-image) {
+  max-width: 736px;
+  max-height: 736px;
+  width: auto;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* Цитаты */
+.postContent :global(.post-quote) {
+  background-color: light-dark(rgb(245, 245, 245), rgb(41, 41, 41));
+  padding: 16px;
+  margin: 18px 21px 16px 0;
+  border-left: 4px solid currentColor;
+  font-style: italic;
+  border-radius: 0.25rem;
+}
+
+/* Ссылки */
+.postContent :global(.post-link) {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.postContent :global(.post-link:hover) {
+  text-decoration: none;
+}
+
+/* Горизонтальная линия */
+.postContent :global(.post-horizontal-rule) {
+  margin: 24px 21px;
+  border: none;
+  border-top: 2px solid currentColor;
+  opacity: 0.2;
+}
+
+/* Inline code */
+.postContent :global(.post-inline-code) {
+  background-color: light-dark(rgb(245, 245, 245), rgb(41, 41, 41));
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Блоки кода */
+.postContent :global(.code-block-wrapper) {
+  margin: 16px 21px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.postContent :global(.code-block-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: color-mix(in oklab, #f0f0f0 100%, transparent);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.postContent :global(.code-block-language) {
+  font-weight: 500;
+}
+
+.postContent :global(.copy-button-container) {
+  display: flex;
+  align-items: center;
+}
+
+.postContent :global(.code-block-pre) {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  background-color: color-mix(in oklab, #f0f0f0 50%, transparent);
+}
+
+.postContent :global(.code-block-code) {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Форматирование текста */
+.postContent :global(.post-strong) {
+  font-weight: 600;
+}
+
+.postContent :global(.post-em) {
+  font-style: italic;
+}
+
+.postContent :global(.post-strikethrough) {
+  text-decoration: line-through;
+}
+
+.postContent :global(.post-underline) {
+  text-decoration: underline;
+}
+
+.postContent :global(.post-sub) {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.postContent :global(.post-sup) {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.postContent :global(.post-highlight) {
+  background-color: yellow;
+  padding: 2px 4px;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .postContent :global(.code-block-header) {
+    background-color: rgb(41, 41, 41);
+  }
+  
+  .postContent :global(.code-block-pre) {
+    background-color: rgba(41, 41, 41, 0.5);
+  }
+  
+  .postContent :global(.post-inline-code) {
+    background-color: rgb(41, 41, 41);
+  }
+  
+  .postContent :global(.post-highlight) {
+    background-color: #664d00;
+  }
+}

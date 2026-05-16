@@ -1,0 +1,94 @@
+import type { HTMLConverters } from '@payloadcms/richtext-lexical/html'
+import escapeHtml from 'escape-html'
+import { hasSubLists, isCheckList, getSafeString, extractPlainText } from './helpers'
+import { 
+  renderChecklistItem, 
+  renderRegularListItem, 
+  createLink, 
+  formatText,
+  renderUpload 
+} from './renderers'
+
+export const createConverters = (): HTMLConverters => ({
+  paragraph: ({ node, nodesToHTML, providedStyleTag }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    const content = children || '<br />'
+    return `<p${providedStyleTag} class="post-paragraph">${content}</p>`
+  },
+
+  heading: ({ node, nodesToHTML, providedStyleTag }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    const tag = node.tag || 'h2'
+    return `<${tag}${providedStyleTag} class="post-heading post-heading-${tag}">${children}</${tag}>`
+  },
+
+  list: ({ node, nodesToHTML, providedStyleTag }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    const tag = node.tag === 'ol' ? 'ol' : 'ul'
+    const listType = node.listType || 'bullet'
+    return `<${tag}${providedStyleTag} class="post-list post-list-${listType}">${children}</${tag}>`
+  },
+
+  listitem: ({ node, nodesToHTML, parent }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    const hasNestedLists = hasSubLists(node)
+    
+    if (isCheckList(parent)) {
+      return renderChecklistItem(node, children, hasNestedLists)
+    }
+    
+    return renderRegularListItem(children, hasNestedLists)
+  },
+
+  upload: ({ node }) => renderUpload(node),
+
+  blockquote: ({ node, nodesToHTML }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    return `<blockquote class="post-quote">${children}</blockquote>`
+  },
+  
+  quote: ({ node, nodesToHTML }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    return `<blockquote class="post-quote">${children}</blockquote>`
+  },
+
+  relationship: ({ node }) => {
+    const user = node.value
+    if (!user || typeof user !== 'object') return ''
+    
+    const email = escapeHtml(getSafeString(user.email))
+    const name = escapeHtml(getSafeString(user.name, email))
+    
+    if (email) {
+      return `<p class="post-relationship"><a href="mailto:${email}" class="post-link">${name}</a></p>`
+    }
+    return `<p class="post-relationship">${name}</p>`
+  },
+
+  link: ({ node, nodesToHTML }) => createLink(node, nodesToHTML),
+  autolink: ({ node, nodesToHTML }) => createLink(node, nodesToHTML),
+
+  horizontalrule: () => `<hr class="post-horizontal-rule" />`,
+
+  code: ({ node, nodesToHTML }) => {
+    const children = nodesToHTML({ nodes: node.children }).join('')
+    const language = escapeHtml(getSafeString(node.language, 'text'))
+    const code = extractPlainText(children)
+    
+    return `<div data-code-block="${language}" data-code-content="${escapeHtml(code)}"></div>`
+  },
+
+  text: ({ node }) => formatText(node),
+
+  // Блоки (blocks) - для кастомных блоков кода
+  // Генерируем маркер, который будет заменен на полный блок с кнопкой Copy
+  blocks: {
+    code: ({ node }) => {
+      const language = node.fields?.language || 'text'
+      const code = node.fields?.code || ''
+      const escapedCode = escapeHtml(code)
+      
+      return `<div data-code-block="${language}" data-code-content="${escapedCode}"></div>`
+    },
+  },
+})

@@ -8,6 +8,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedDevOrigins: ['unelectronic-footloose-annalisa.ngrok-free.dev'],
 }
 
 export default withPayload(nextConfig)
