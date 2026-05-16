@@ -81,14 +81,16 @@ export const createConverters = (): HTMLConverters => ({
   text: ({ node }) => formatText(node),
 
   // Блоки (blocks) - для кастомных блоков кода
-  // Генерируем маркер, который будет заменен на полный блок с кнопкой Copy
   blocks: {
     code: ({ node }) => {
       const language = node.fields?.language || 'text'
       const code = node.fields?.code || ''
       const escapedCode = escapeHtml(code)
       
-      return `<div data-code-block="${language}" data-code-content="${escapedCode}"></div>`
+      return `<div class="code-block-wrapper">
+        <div class="code-block-header">${language}</div>
+        <pre class="code-block-pre"><code class="code-block-code">${escapedCode}</code></pre>
+      </div>`
     },
   },
 })
