@@ -114,6 +114,22 @@
   text-decoration: none;
 }
 
+/* Relationship (ссылки на пользователей/авторов) */
+.postContent :global(.post-relationship) {
+  margin: 0 21px 12px;
+  word-wrap: break-word;
+  line-height: 1.6;
+}
+
+.postContent :global(.relationship-link) {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.postContent :global(.relationship-link:hover) {
+  text-decoration: none;
+}
+
 /* Горизонтальная линия */
 .postContent :global(.post-horizontal-rule) {
   margin: 24px 21px;
@@ -145,10 +161,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
-  background-color: color-mix(in oklab, #f0f0f0 100%, transparent);
+  background-color: color-mix(in oklab, var(--muted) 50%, transparent);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   font-size: 12px;
-  font-family: 'Courier New', Courier, monospace;
+  color: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.6));
+  font-family: monospace;
 }
 
 .postContent :global(.code-block-language) {
@@ -181,15 +198,14 @@
   margin: 0;
   padding: 16px;
   overflow-x: auto;
-  background-color: color-mix(in oklab, #f0f0f0 50%, transparent);
+  background-color: color-mix(in oklab, var(--muted) 100%, transparent);
 }
 
 .postContent :global(.code-block-code) {
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
+  color: inherit;
 }
 
 /* Форматирование текста */
@@ -226,18 +242,6 @@
 
 /* Темная тема */
 @media (prefers-color-scheme: dark) {
-  .postContent :global(.code-block-header) {
-    background-color: rgb(41, 41, 41);
-  }
-  
-  .postContent :global(.code-block-pre) {
-    background-color: rgba(41, 41, 41, 0.5);
-  }
-  
-  .postContent :global(.post-inline-code) {
-    background-color: rgb(41, 41, 41);
-  }
-  
   .postContent :global(.post-highlight) {
     background-color: #664d00;
   }
