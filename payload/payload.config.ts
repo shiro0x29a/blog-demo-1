@@ -49,6 +49,14 @@ export default buildConfig({
                 ],
               },
               {
+                name: 'filename',
+                type: 'text',
+                required: false,
+                admin: {
+                  description: 'Optional filename to display (e.g., main.py, index.js)',
+                },
+              },
+              {
                 name: 'code',
                 type: 'textarea',
                 required: true,

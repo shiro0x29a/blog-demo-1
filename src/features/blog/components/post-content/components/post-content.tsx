@@ -21,6 +21,7 @@ export function PostContent({ content }: PostContentProps) {
     markers.forEach((marker) => {
       const language = marker.getAttribute('data-code-block') || 'text'
       const code = marker.getAttribute('data-code-content') || ''
+      const filename = marker.getAttribute('data-code-filename') || undefined
       
       // Создаем контейнер для React компонента
       const container = document.createElement('div')
@@ -28,7 +29,7 @@ export function PostContent({ content }: PostContentProps) {
       
       // Рендерим React компонент
       const root = createRoot(container)
-      root.render(<CodeBlockRenderer language={language} code={code} />)
+      root.render(<CodeBlockRenderer language={language} code={code} filename={filename} />)
       roots.push(root)
     })
 

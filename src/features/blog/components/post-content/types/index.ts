@@ -13,6 +13,7 @@ export interface LexicalNode {
     newTab?: boolean
     language?: string
     code?: string
+    filename?: string
   }
   [key: string]: unknown
 }

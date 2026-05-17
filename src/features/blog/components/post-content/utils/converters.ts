@@ -84,13 +84,15 @@ export const createConverters = (): HTMLConverters => ({
   blocks: {
     code: ({ node }) => {
       const language = node.fields?.language || 'text'
+      const filename = node.fields?.filename || ''
       let code = node.fields?.code || ''
       
       // Заменяем неразрывные пробелы на обычные
       code = code.replace(/\u00a0/g, ' ')
       
       // Создаем маркер с данными в атрибутах
-      return `<div data-code-block="${escapeHtml(language)}" data-code-content="${escapeHtml(code)}"></div>`
+      const filenameAttr = filename ? ` data-code-filename="${escapeHtml(filename)}"` : ''
+      return `<div data-code-block="${escapeHtml(language)}" data-code-content="${escapeHtml(code)}"${filenameAttr}></div>`
     },
   },
 })

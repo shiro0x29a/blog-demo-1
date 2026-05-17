@@ -168,6 +168,17 @@
   font-family: monospace;
 }
 
+.postContent :global(.code-block-info) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.postContent :global(.code-block-filename) {
+  font-weight: 600;
+  color: light-dark(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.8));
+}
+
 .postContent :global(.code-block-language) {
   font-weight: 500;
 }

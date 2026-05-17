@@ -6,9 +6,10 @@ import { Check, Copy } from 'lucide-react'
 interface CodeBlockRendererProps {
   language: string
   code: string
+  filename?: string
 }
 
-export function CodeBlockRenderer({ language, code }: CodeBlockRendererProps) {
+export function CodeBlockRenderer({ language, code, filename }: CodeBlockRendererProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -20,7 +21,10 @@ export function CodeBlockRenderer({ language, code }: CodeBlockRendererProps) {
   return (
     <div className="code-block-wrapper">
       <div className="code-block-header">
-        <span className="code-block-language">{language}</span>
+        <div className="code-block-info">
+          {filename && <span className="code-block-filename">{filename}</span>}
+          <span className="code-block-language">{language}</span>
+        </div>
         <button
           onClick={handleCopy}
           className="copy-button"
