@@ -1,35 +1,40 @@
-import { useState, useEffect, useMemo } from 'react'
-import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
-import { createConverters } from '../utils/converters'
+import { useState, useEffect } from 'react'
+import { parseContentWithCodeBlocks, type ContentPart } from '../utils/parse-content'
 import { sanitizeHtml } from '../utils/sanitize'
 import type { LexicalRoot } from '../types'
 
 /**
- * Хук для конвертации Lexical контента в HTML
+ * Хук для конвертации Lexical контента в части (HTML + блоки кода)
  */
-export const usePostContent = (content: LexicalRoot | null) => {
-  const [sanitizedHtml, setSanitizedHtml] = useState<string>('')
-  const converters = useMemo(() => createConverters(), [])
+export const usePostContent = (content: LexicalRoot | null): ContentPart[] => {
+  const [contentParts, setContentParts] = useState<ContentPart[]>([])
 
   useEffect(() => {
     if (!content?.root) {
-      setSanitizedHtml('')
+      setContentParts([])
       return
     }
 
     try {
-      const rawHtml = convertLexicalToHTML({
-        data: content,
-        converters,
+      const parts = parseContentWithCodeBlocks(content)
+      
+      // Санитизируем только HTML части
+      const sanitizedParts = parts.map(part => {
+        if (part.type === 'html') {
+          return {
+            ...part,
+            content: sanitizeHtml(part.content)
+          }
+        }
+        return part
       })
       
-      const cleanHtml = sanitizeHtml(rawHtml)
-      setSanitizedHtml(cleanHtml)
+      setContentParts(sanitizedParts)
     } catch (error) {
-      console.error('Failed to convert lexical content:', error)
-      setSanitizedHtml('')
+      console.error('Failed to parse content:', error)
+      setContentParts([])
     }
-  }, [content, converters])
+  }, [content])
 
-  return sanitizedHtml
+  return contentParts
 }
