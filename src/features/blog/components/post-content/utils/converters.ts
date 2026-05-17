@@ -9,10 +9,7 @@ import {
   renderUpload 
 } from './renderers'
 
-export const createConverters = (): HTMLConverters => {
-  let codeBlockCounter = 0
-  
-  return {
+export const createConverters = (): HTMLConverters => ({
   paragraph: ({ node, nodesToHTML, providedStyleTag }) => {
     const children = nodesToHTML({ nodes: node.children }).join('')
     const content = children || '<br />'
@@ -86,10 +83,14 @@ export const createConverters = (): HTMLConverters => {
   // Блоки (blocks) - для кастомных блоков кода
   blocks: {
     code: ({ node }) => {
-      const id = codeBlockCounter++
-      // Генерируем маркер, который будет заменен на React компонент
-      return `<!--CODE_BLOCK_${id}-->`
+      const language = node.fields?.language || 'text'
+      let code = node.fields?.code || ''
+      
+      // Заменяем неразрывные пробелы на обычные
+      code = code.replace(/\u00a0/g, ' ')
+      
+      // Создаем маркер с данными в атрибутах
+      return `<div data-code-block="${escapeHtml(language)}" data-code-content="${escapeHtml(code)}"></div>`
     },
   },
-  }
-}
+})
