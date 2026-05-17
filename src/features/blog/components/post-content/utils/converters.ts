@@ -84,14 +84,13 @@ export const createConverters = (): HTMLConverters => ({
   blocks: {
     code: ({ node }) => {
       const language = node.fields?.language || 'text'
-      const code = node.fields?.code || ''
+      let code = node.fields?.code || ''
       
-      // Создаем маркер с JSON данными для портала
-      const data = JSON.stringify({ language, code })
-      // Экранируем кавычки для безопасной вставки в атрибут
-      const escaped = data.replace(/"/g, '&quot;')
+      // Заменяем неразрывные пробелы на обычные
+      code = code.replace(/\u00a0/g, ' ')
       
-      return `<div data-code-component="${escaped}"></div>`
+      // Создаем маркер с данными в атрибутах
+      return `<div data-code-block="${escapeHtml(language)}" data-code-content="${escapeHtml(code)}"></div>`
     },
   },
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Check, Copy } from 'lucide-react'
 
 interface CodeBlockRendererProps {
@@ -11,6 +11,12 @@ interface CodeBlockRendererProps {
 export function CodeBlockRenderer({ language, code }: CodeBlockRendererProps) {
   const [copied, setCopied] = useState(false)
 
+  useEffect(() => {
+    console.log('=== CodeBlockRenderer mounted ===')
+    console.log('Language:', language)
+    console.log('Code:', code)
+  }, [language, code])
+
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code)
     setCopied(true)
@@ -18,7 +24,7 @@ export function CodeBlockRenderer({ language, code }: CodeBlockRendererProps) {
   }
 
   return (
-    <div className="code-block-wrapper">
+    <div className="code-block-wrapper" style={{ border: '2px solid blue', padding: '10px' }}>
       <div className="code-block-header">
         <span className="code-block-language">{language}</span>
         <button
