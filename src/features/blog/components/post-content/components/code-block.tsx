@@ -21,27 +21,27 @@ export function CodeBlockRenderer({ language, code, filename }: CodeBlockRendere
   return (
     <div className="code-block-wrapper">
       <div className="code-block-header">
-        <div className="code-block-info">
-          {filename && <span className="code-block-filename">{filename}</span>}
+        {filename && <span className="code-block-filename">{filename}</span>}
+        <div className="code-block-actions">
           <span className="code-block-language">{language}</span>
+          <button
+            onClick={handleCopy}
+            className="copy-button"
+            aria-label="Copy code"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3 w-3" />
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3" />
+                <span>Copy</span>
+              </>
+            )}
+          </button>
         </div>
-        <button
-          onClick={handleCopy}
-          className="copy-button"
-          aria-label="Copy code"
-        >
-          {copied ? (
-            <>
-              <Check className="h-3 w-3" />
-              <span>Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="h-3 w-3" />
-              <span>Copy</span>
-            </>
-          )}
-        </button>
       </div>
       <pre className="code-block-pre">
         <code className="code-block-code">{code}</code>
