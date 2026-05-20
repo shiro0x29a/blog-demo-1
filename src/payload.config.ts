@@ -1,1 +1,1 @@
-export { default } from '../payload/payload.config'
+export { default } from './features/payload/payload.config'
