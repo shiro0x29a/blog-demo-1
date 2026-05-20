@@ -35,7 +35,10 @@ export function PostContent({ content }: PostContentProps) {
 
     // Cleanup при размонтировании
     return () => {
-      roots.forEach(root => root.unmount())
+      // Асинхронный unmount для избежания race condition
+      setTimeout(() => {
+        roots.forEach(root => root.unmount())
+      }, 0)
     }
   }, [sanitizedHtml])
 
