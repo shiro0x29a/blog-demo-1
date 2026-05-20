@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/utils'
 
 const tabs = [
+  { label: 'ALL', href: '/blog/all' },
   { label: 'NEWS', href: '/blog/news' },
   { label: 'FAQ', href: '/blog/faq' },
   { label: 'USEFUL ARTICLES', href: '/blog/articles' },
