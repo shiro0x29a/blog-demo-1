@@ -11,22 +11,23 @@ export const metadata: Metadata = {
 }
 
 interface ArticlesPageProps {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; q?: string }>
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
-  const { page } = await searchParams
+  const { page, q } = await searchParams
   const currentPage = parseInt(page || '1', 10)
   const limit = 10
+  const query = q || ''
 
   // Get the USEFUL ARTICLES category
   const articlesCategory = await getCategoryBySlug('articles')
   
   // Получаем все посты для тегов и фильтрации
-  const allPosts = await getPosts({ page: 1, limit: 1000, category: articlesCategory?.id })
+  const allPosts = await getPosts({ page: 1, limit: 1000, category: articlesCategory?.id, search: query || undefined })
   
   // Получаем посты для текущей страницы (для пагинации без фильтров)
-  const paginatedPosts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id })
+  const paginatedPosts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id, search: query || undefined })
 
   if (!allPosts || !paginatedPosts) {
     notFound()
@@ -37,9 +38,14 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">Articles</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          {query ? 'Search Results' : 'Articles'}
+        </h1>
         <p className="text-muted-foreground">
-          Read our in-depth articles and guides
+          {query 
+            ? `Found ${paginatedPosts.totalDocs} result${paginatedPosts.totalDocs !== 1 ? 's' : ''} for "${query}" in Articles`
+            : 'Read our in-depth articles and guides'
+          }
         </p>
       </div>
 

@@ -11,19 +11,20 @@ export const metadata: Metadata = {
 }
 
 interface AllPageProps {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; q?: string }>
 }
 
 export default async function AllPage({ searchParams }: AllPageProps) {
-  const { page } = await searchParams
+  const { page, q } = await searchParams
   const currentPage = parseInt(page || '1', 10)
   const limit = 10
+  const query = q || ''
 
   // Получаем все посты для тегов и фильтрации
-  const allPosts = await getPosts({ page: 1, limit: 1000 })
+  const allPosts = await getPosts({ page: 1, limit: 1000, search: query || undefined })
   
   // Получаем посты для текущей страницы (для пагинации без фильтров)
-  const paginatedPosts = await getPosts({ page: currentPage, limit })
+  const paginatedPosts = await getPosts({ page: currentPage, limit, search: query || undefined })
 
   if (!allPosts || !paginatedPosts) {
     notFound()
@@ -34,9 +35,14 @@ export default async function AllPage({ searchParams }: AllPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">All Posts</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          {query ? 'Search Results' : 'All Posts'}
+        </h1>
         <p className="text-muted-foreground">
-          Browse all blog posts
+          {query 
+            ? `Found ${paginatedPosts.totalDocs} result${paginatedPosts.totalDocs !== 1 ? 's' : ''} for "${query}"`
+            : 'Browse all blog posts'
+          }
         </p>
       </div>
 

@@ -2,10 +2,11 @@
 
 import { Search, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 
 export function BlogSearch() {
   const searchParams = useSearchParams()
+  const pathname = usePathname()
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const router = useRouter()
 
@@ -16,13 +17,17 @@ export function BlogSearch() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
-      router.push(`/blog/search?q=${encodeURIComponent(query.trim())}`)
+      // Добавляем query параметр к текущему пути
+      const currentPath = pathname.startsWith('/blog/search') ? '/blog/all' : pathname
+      router.push(`${currentPath}?q=${encodeURIComponent(query.trim())}`)
     }
   }
 
   const handleClear = () => {
     setQuery('')
-    router.push('/blog')
+    // Возвращаемся на текущую страницу без query параметра
+    const currentPath = pathname.startsWith('/blog/search') ? '/blog/all' : pathname
+    router.push(currentPath)
   }
 
   return (

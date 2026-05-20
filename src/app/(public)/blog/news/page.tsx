@@ -11,22 +11,23 @@ export const metadata: Metadata = {
 }
 
 interface NewsPageProps {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; q?: string }>
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
-  const { page } = await searchParams
+  const { page, q } = await searchParams
   const currentPage = parseInt(page || '1', 10)
   const limit = 10
+  const query = q || ''
 
   // Get the NEWS category
   const newsCategory = await getCategoryBySlug('news')
   
   // Получаем все посты для тегов и фильтрации
-  const allPosts = await getPosts({ page: 1, limit: 1000, category: newsCategory?.id })
+  const allPosts = await getPosts({ page: 1, limit: 1000, category: newsCategory?.id, search: query || undefined })
   
   // Получаем посты для текущей страницы (для пагинации без фильтров)
-  const paginatedPosts = await getPosts({ page: currentPage, limit, category: newsCategory?.id })
+  const paginatedPosts = await getPosts({ page: currentPage, limit, category: newsCategory?.id, search: query || undefined })
 
   if (!allPosts || !paginatedPosts) {
     notFound()
@@ -37,9 +38,14 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">News</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          {query ? 'Search Results' : 'News'}
+        </h1>
         <p className="text-muted-foreground">
-          Read our latest news articles and updates
+          {query 
+            ? `Found ${paginatedPosts.totalDocs} result${paginatedPosts.totalDocs !== 1 ? 's' : ''} for "${query}" in News`
+            : 'Read our latest news articles and updates'
+          }
         </p>
       </div>
 
