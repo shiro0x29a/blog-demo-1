@@ -1,5 +1,0 @@
-export { PostCard } from './PostCard'
-export { PostContent } from './PostContent'
-export { PostMeta } from './PostMeta'
-export { Sidebar } from './Sidebar'
-export { Pagination } from './Pagination'
