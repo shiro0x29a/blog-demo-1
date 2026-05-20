@@ -1,6 +1,5 @@
-import { getPosts, getCategoryBySlug, getCategories } from '@/features/payload/lib/queries'
+import { getPosts, getCategoryBySlug } from '@/features/payload/lib/queries'
 import { PostCard } from '@/features/blog/components/post-card'
-import { Sidebar } from '@/features/blog/components/sidebar'
 import { Pagination } from '@/features/blog/components/pagination'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
@@ -46,10 +45,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   console.log('[CategoryPage] calling getPosts with category.id:', category.id)
   
-  const [posts, categories] = await Promise.all([
-    getPosts({ page: currentPage, limit, category: category.id }),
-    getCategories(),
-  ])
+  const posts = await getPosts({ page: currentPage, limit, category: category.id })
   
   console.log('[CategoryPage] posts result:', { totalDocs: posts.totalDocs, docsCount: posts.docs.length })
 
@@ -61,46 +57,40 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <h1 className="text-4xl font-bold mb-2">{category.name}</h1>
         {category.description && (
           <p className="text-muted-foreground">{category.description}</p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          {posts.docs.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                No posts found in this category. Check back soon!
-              </p>
+      <div className="max-w-5xl mx-auto">
+        {posts.docs.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              No posts found in this category. Check back soon!
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {posts.docs.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {posts.docs.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
+
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={posts.page}
+                  totalPages={totalPages}
+                  hasNextPage={posts.hasNextPage}
+                  hasPrevPage={posts.hasPrevPage}
+                />
               </div>
-
-              {totalPages > 1 && (
-                <div className="mt-8">
-                  <Pagination
-                    currentPage={posts.page}
-                    totalPages={totalPages}
-                    hasNextPage={posts.hasNextPage}
-                    hasPrevPage={posts.hasPrevPage}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <aside className="lg:col-span-1">
-          <Sidebar categories={categories} />
-        </aside>
+            )}
+          </>
+        )}
       </div>
     </div>
   )
