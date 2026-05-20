@@ -33,7 +33,13 @@ export function BlogSearch() {
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <button
+          type="submit"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Search"
+        >
+          <Search className="w-5 h-5" />
+        </button>
         <input
           type="text"
           value={query}
