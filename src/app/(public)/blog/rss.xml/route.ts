@@ -1,4 +1,4 @@
-import { getPosts } from '@/shared/lib/payload/queries'
+import { getPosts } from '@/features/payload/lib/queries'
 import { NextResponse } from 'next/server'
 
 export async function GET() {

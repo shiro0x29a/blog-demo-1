@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
-import type { Category } from '@/shared/lib/payload/types'
+import type { Category } from '@/features/payload/lib/types'
 
 interface BreadcrumbItem {
   label: string

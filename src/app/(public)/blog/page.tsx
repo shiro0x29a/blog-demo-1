@@ -1,4 +1,4 @@
-import { getPosts, getCategories } from '@/shared/lib/payload/queries'
+import { getPosts, getCategories } from '@/features/payload/lib/queries'
 import { PostCard } from '@/features/blog/components/post-card'
 import { Sidebar } from '@/features/blog/components/sidebar'
 import { Pagination } from '@/features/blog/components/pagination'

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { baseUrl } from "@/shared/lib/config/site";
-import { getPosts, getCategories } from "@/shared/lib/payload/queries";
+import { getPosts, getCategories } from "@/features/payload/lib/queries";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = ["", "/about", "/auth/login", "/unauthorized", "/blog"];

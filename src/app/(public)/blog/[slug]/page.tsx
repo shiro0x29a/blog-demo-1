@@ -1,4 +1,4 @@
-import { getPostBySlug, getCategories } from '@/shared/lib/payload/queries'
+import { getPostBySlug, getCategories } from '@/features/payload/lib/queries'
 import { PostContent } from '@/features/blog/components/post-content'
 import { PostMeta } from '@/features/blog/components/post-meta'
 import { Sidebar } from '@/features/blog/components/sidebar'

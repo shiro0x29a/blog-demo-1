@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Post } from '@/shared/lib/payload/types'
+import type { Post } from '@/features/payload/lib/types'
 
 interface PostCardProps {
   post: Post

@@ -1,4 +1,4 @@
-import { getPosts, getCategoryBySlug } from '@/shared/lib/payload/queries'
+import { getPosts, getCategoryBySlug } from '@/features/payload/lib/queries'
 import { BlogTabs } from '@/features/blog/components/blog-tabs'
 import { BlogSearch } from '@/features/blog/components/blog-search'
 import { BlogPostsClient } from '@/features/blog/components/blog-posts-client'

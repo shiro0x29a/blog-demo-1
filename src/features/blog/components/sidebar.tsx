@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { FolderOpen, FileText } from 'lucide-react'
-import type { Category } from '@/shared/lib/payload/types'
+import type { Category } from '@/features/payload/lib/types'
 
 interface SidebarProps {
   categories: Category[] | null

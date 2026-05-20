@@ -1,4 +1,4 @@
-import type { Post, Author, Category } from '@/shared/lib/payload/types'
+import type { Post, Author, Category } from '@/features/payload/lib/types'
 
 export function generateArticleSchema(
   post: Post,
