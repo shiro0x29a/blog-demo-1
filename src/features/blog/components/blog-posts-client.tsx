@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { PostCard } from '@/features/blog/components/PostCard'
-import { Pagination } from '@/features/blog/components/Pagination'
-import { TagFilters } from '@/features/blog/components/TagFilters'
+import { PostCard } from '@/features/blog/components/post-card'
+import { Pagination } from '@/features/blog/components/pagination'
+import { TagFilters } from '@/features/blog/components/tag-filters'
 import type { Post } from '@/shared/lib/payload/types'
 
 interface BlogPostsClientProps {

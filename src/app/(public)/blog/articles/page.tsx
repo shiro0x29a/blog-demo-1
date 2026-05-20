@@ -1,7 +1,7 @@
 import { getPosts, getCategoryBySlug } from '@/shared/lib/payload/queries'
-import { BlogTabs } from '@/features/blog/components/BlogTabs'
-import { BlogSearch } from '@/features/blog/components/BlogSearch'
-import { BlogPostsClient } from '@/features/blog/components/BlogPostsClient'
+import { BlogTabs } from '@/features/blog/components/blog-tabs'
+import { BlogSearch } from '@/features/blog/components/blog-search'
+import { BlogPostsClient } from '@/features/blog/components/blog-posts-client'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 

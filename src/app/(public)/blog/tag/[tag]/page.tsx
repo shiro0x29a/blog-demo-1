@@ -1,8 +1,8 @@
 import { getPosts } from '@/shared/lib/payload/queries'
-import { PostCard } from '@/features/blog/components/PostCard'
-import { Pagination } from '@/features/blog/components/Pagination'
-import { BlogTabs } from '@/features/blog/components/BlogTabs'
-import { BlogSearch } from '@/features/blog/components/BlogSearch'
+import { PostCard } from '@/features/blog/components/post-card'
+import { Pagination } from '@/features/blog/components/pagination'
+import { BlogTabs } from '@/features/blog/components/blog-tabs'
+import { BlogSearch } from '@/features/blog/components/blog-search'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 

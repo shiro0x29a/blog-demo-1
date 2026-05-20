@@ -1,7 +1,7 @@
 import { getPosts, getCategories } from '@/shared/lib/payload/queries'
-import { PostCard } from '@/features/blog/components/PostCard'
-import { Sidebar } from '@/features/blog/components/Sidebar'
-import { Pagination } from '@/features/blog/components/Pagination'
+import { PostCard } from '@/features/blog/components/post-card'
+import { Sidebar } from '@/features/blog/components/sidebar'
+import { Pagination } from '@/features/blog/components/pagination'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
