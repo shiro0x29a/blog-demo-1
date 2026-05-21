@@ -31,16 +31,16 @@ export const createConverters = (): HTMLConverters => ({
 
   listitem: ({ node, nodesToHTML, parent }) => {
     const children = nodesToHTML({ nodes: node.children }).join('')
-    const hasNestedLists = hasSubLists(node)
+    const hasNestedLists = hasSubLists(node as any)
     
     if (isCheckList(parent)) {
-      return renderChecklistItem(node, children, hasNestedLists)
+      return renderChecklistItem(node as any, children, hasNestedLists)
     }
     
     return renderRegularListItem(children, hasNestedLists)
   },
 
-  upload: ({ node }) => renderUpload(node),
+  upload: ({ node }) => renderUpload(node as any),
 
   blockquote: ({ node, nodesToHTML }) => {
     const children = nodesToHTML({ nodes: node.children }).join('')
@@ -56,8 +56,8 @@ export const createConverters = (): HTMLConverters => ({
     const user = node.value
     if (!user || typeof user !== 'object') return ''
     
-    const email = escapeHtml(getSafeString(user.email))
-    const name = escapeHtml(getSafeString(user.name, email))
+    const email = escapeHtml(getSafeString((user as any).email))
+    const name = escapeHtml(getSafeString((user as any).name, email))
     
     if (email) {
       return `<p class="post-relationship"><a href="mailto:${email}" class="post-link">${name}</a></p>`
@@ -65,8 +65,8 @@ export const createConverters = (): HTMLConverters => ({
     return `<p class="post-relationship">${name}</p>`
   },
 
-  link: ({ node, nodesToHTML }) => createLink(node, nodesToHTML),
-  autolink: ({ node, nodesToHTML }) => createLink(node, nodesToHTML),
+  link: ({ node, nodesToHTML }) => createLink(node as any, nodesToHTML),
+  autolink: ({ node, nodesToHTML }) => createLink(node as any, nodesToHTML),
 
   horizontalrule: () => `<hr class="post-horizontal-rule" />`,
 
@@ -83,9 +83,9 @@ export const createConverters = (): HTMLConverters => ({
   // Блоки (blocks) - для кастомных блоков кода
   blocks: {
     code: ({ node }) => {
-      const language = node.fields?.language || 'text'
-      const filename = node.fields?.filename || ''
-      let code = node.fields?.code || ''
+      const language = (node.fields as any)?.language || 'text'
+      const filename = (node.fields as any)?.filename || ''
+      let code = (node.fields as any)?.code || ''
       
       // Заменяем неразрывные пробелы на обычные
       code = code.replace(/\u00a0/g, ' ')

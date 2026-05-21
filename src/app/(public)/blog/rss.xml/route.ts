@@ -24,7 +24,7 @@ export async function GET() {
       <description><![CDATA[${post.excerpt}]]></description>
       <pubDate>${post.publishedAt ? new Date(post.publishedAt).toUTCString() : ''}</pubDate>
       <guid isPermaLink="true">${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/blog/${post.slug}</guid>
-      ${post.categories?.map((category) => `<category>${category.name}</category>`).join('') || ''}
+      ${post.categories?.map((category) => typeof category === 'object' ? `<category>${category.name}</category>` : '').join('') || ''}
     </item>
         `
       )

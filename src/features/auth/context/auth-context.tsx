@@ -4,7 +4,7 @@ import type React from "react";
 import { createContext, useContext, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
-import type { AuthUser, AuthContext as AuthContextType } from "./types/types";
+import type { AuthUser, AuthContext as AuthContextType } from "../types/types";
 import LoadingScreen from "@/shared/components/common/loading-screen";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

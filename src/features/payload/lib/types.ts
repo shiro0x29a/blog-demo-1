@@ -1,63 +1,89 @@
 export interface Author {
-  id: string
+  id: number
   name: string
   email: string
   bio?: any
-  avatar?: Media
-  website?: string
+  avatar?: number | Media | null
+  website?: string | null
   socialLinks?: Array<{
     platform: 'twitter' | 'linkedin' | 'github' | 'instagram'
     url: string
-  }>
+  }> | null
   updatedAt: string
   createdAt: string
 }
 
 export interface Category {
-  id: string
+  id: number
   name: string
   slug: string
-  description?: string
-  icon?: string
+  description?: string | null
+  icon?: string | null
   updatedAt: string
   createdAt: string
 }
 
 export interface Tag {
-  id: string
+  id: number
   name: string
   updatedAt: string
   createdAt: string
 }
 
 export interface Media {
-  id: string
+  id: number
   title: string
   alt: string
-  caption?: string
-  url: string
-  thumbnail?: string
-  medium?: string
-  large?: string
-  width?: number
-  height?: number
-  mimeType?: string
+  caption?: string | null
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  sizes?: {
+    thumbnail?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    medium?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+    large?: {
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
   updatedAt: string
   createdAt: string
 }
 
 export interface Post {
-  id: string
+  id: number
   title: string
   slug: string
   excerpt: string
   content: any
-  coverImage?: Media
+  coverImage?: number | Media | null
   status: 'draft' | 'published'
-  publishedAt?: string
-  author: Author
-  categories?: Category[]
-  tags?: Tag[]
+  publishedAt?: string | null
+  author: number | Author
+  categories?: (number | Category)[] | null
+  tags?: (number | Tag)[] | null
   updatedAt: string
   createdAt: string
 }

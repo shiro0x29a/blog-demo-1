@@ -24,10 +24,10 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   const newsCategory = await getCategoryBySlug('news')
   
   // Получаем все посты для тегов и фильтрации
-  const allPosts = await getPosts({ page: 1, limit: 1000, category: newsCategory?.id, search: query || undefined })
+  const allPosts = await getPosts({ page: 1, limit: 1000, category: newsCategory?.id ? String(newsCategory.id) : undefined, search: query || undefined })
   
   // Получаем посты для текущей страницы (для пагинации без фильтров)
-  const paginatedPosts = await getPosts({ page: currentPage, limit, category: newsCategory?.id, search: query || undefined })
+  const paginatedPosts = await getPosts({ page: currentPage, limit, category: newsCategory?.id ? String(newsCategory.id) : undefined, search: query || undefined })
 
   if (!allPosts || !paginatedPosts) {
     notFound()
@@ -56,7 +56,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       <BlogPostsClient
         allPosts={allPosts.docs}
         paginatedPosts={paginatedPosts.docs}
-        currentPage={paginatedPosts.page}
+        currentPage={paginatedPosts.page ?? 1}
         totalPages={totalPages}
         hasNextPage={paginatedPosts.hasNextPage}
         hasPrevPage={paginatedPosts.hasPrevPage}

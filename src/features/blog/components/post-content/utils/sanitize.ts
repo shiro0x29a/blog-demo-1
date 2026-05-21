@@ -5,9 +5,9 @@ import { ALLOWED_HTML_TAGS, ALLOWED_HTML_ATTRIBUTES } from '../constants'
  * Настройки DOMPurify для контента поста
  */
 export const SANITIZE_CONFIG = {
-  ALLOWED_TAGS: [...ALLOWED_HTML_TAGS],
-  ALLOWED_ATTR: [...ALLOWED_HTML_ATTRIBUTES],
-} as const
+  ALLOWED_TAGS: ALLOWED_HTML_TAGS as unknown as string[],
+  ALLOWED_ATTR: ALLOWED_HTML_ATTRIBUTES as unknown as string[],
+}
 
 /**
  * Санитизирует HTML контент

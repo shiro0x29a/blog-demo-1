@@ -58,7 +58,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               {totalPages > 1 && (
                 <div className="mt-8">
                   <Pagination
-                    currentPage={posts.page}
+                    currentPage={posts.page ?? 1}
                     totalPages={totalPages}
                     hasNextPage={posts.hasNextPage}
                     hasPrevPage={posts.hasPrevPage}

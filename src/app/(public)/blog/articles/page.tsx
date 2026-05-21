@@ -24,10 +24,10 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
   const articlesCategory = await getCategoryBySlug('articles')
   
   // Получаем все посты для тегов и фильтрации
-  const allPosts = await getPosts({ page: 1, limit: 1000, category: articlesCategory?.id, search: query || undefined })
+  const allPosts = await getPosts({ page: 1, limit: 1000, category: articlesCategory?.id ? String(articlesCategory.id) : undefined, search: query || undefined })
   
   // Получаем посты для текущей страницы (для пагинации без фильтров)
-  const paginatedPosts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id, search: query || undefined })
+  const paginatedPosts = await getPosts({ page: currentPage, limit, category: articlesCategory?.id ? String(articlesCategory.id) : undefined, search: query || undefined })
 
   if (!allPosts || !paginatedPosts) {
     notFound()
@@ -56,7 +56,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
       <BlogPostsClient
         allPosts={allPosts.docs}
         paginatedPosts={paginatedPosts.docs}
-        currentPage={paginatedPosts.page}
+        currentPage={paginatedPosts.page ?? 1}
         totalPages={totalPages}
         hasNextPage={paginatedPosts.hasNextPage}
         hasPrevPage={paginatedPosts.hasPrevPage}

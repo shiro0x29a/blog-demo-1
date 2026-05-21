@@ -19,7 +19,7 @@ export const usePostContent = (content: LexicalRoot | null) => {
 
     try {
       const rawHtml = convertLexicalToHTML({
-        data: content,
+        data: content as any,
         converters,
       })
       

@@ -21,8 +21,10 @@ export const hasSubLists = (node: LexicalNode): boolean =>
 /**
  * Проверяет, является ли родитель чеклистом
  */
-export const isCheckList = (parent: unknown): boolean => 
-  parent && typeof parent === 'object' && 'listType' in parent && parent.listType === 'check'
+export const isCheckList = (parent: unknown): boolean => {
+  if (!parent || typeof parent !== 'object') return false
+  return 'listType' in parent && (parent as any).listType === 'check'
+}
 
 /**
  * Проверяет, не является ли файл изображением

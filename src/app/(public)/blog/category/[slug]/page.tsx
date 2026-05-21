@@ -45,7 +45,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   console.log('[CategoryPage] calling getPosts with category.id:', category.id)
   
-  const posts = await getPosts({ page: currentPage, limit, category: category.id })
+  const posts = await getPosts({ page: currentPage, limit, category: String(category.id) })
   
   console.log('[CategoryPage] posts result:', { totalDocs: posts.totalDocs, docsCount: posts.docs.length })
 
@@ -82,7 +82,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {totalPages > 1 && (
               <div className="mt-8">
                 <Pagination
-                  currentPage={posts.page}
+                  currentPage={posts.page ?? 1}
                   totalPages={totalPages}
                   hasNextPage={posts.hasNextPage}
                   hasPrevPage={posts.hasPrevPage}

@@ -91,11 +91,11 @@ export function renderUpload(node: LexicalNode): string {
   const uploadDoc = node.value
   if (!uploadDoc || typeof uploadDoc !== 'object') return ''
   
-  const alt = escapeHtml(getSafeString(uploadDoc.alt))
-  const url = getSafeString(uploadDoc.url)
+  const alt = escapeHtml(getSafeString((uploadDoc as any).alt))
+  const url = getSafeString((uploadDoc as any).url)
   
-  if (isNotImage(uploadDoc.mimeType)) {
-    const filename = escapeHtml(getSafeString(uploadDoc.filename))
+  if (isNotImage((uploadDoc as any).mimeType)) {
+    const filename = escapeHtml(getSafeString((uploadDoc as any).filename))
     return `<a href="${url}" class="post-link" rel="noopener noreferrer">${filename}</a>`
   }
   

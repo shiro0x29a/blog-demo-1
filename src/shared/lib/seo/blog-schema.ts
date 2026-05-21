@@ -4,29 +4,35 @@ export function generateArticleSchema(
   post: Post,
   baseUrl: string
 ): Record<string, any> {
+  const author = typeof post.author === 'object' ? post.author : null
+  const authorAvatar = author && typeof author.avatar === 'object' ? author.avatar : null
+  const coverImage = typeof post.coverImage === 'object' ? post.coverImage : null
+
   const authorSchema = {
     '@type': 'Person',
-    name: post.author.name,
-    ...(post.author.website && { url: post.author.website }),
-    ...(post.author.avatar && { image: post.author.avatar.url }),
+    name: author?.name || '',
+    ...(author?.website && { url: author.website }),
+    ...(authorAvatar?.url && { image: authorAvatar.url }),
   }
 
-  const categorySchemas = post.categories?.map((category: Category) => ({
-    '@type': 'Thing',
-    name: category.name,
-  }))
+  const categorySchemas = post.categories
+    ?.filter((category): category is Category => typeof category === 'object')
+    .map((category) => ({
+      '@type': 'Thing',
+      name: category.name,
+    }))
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt,
-    ...(post.coverImage && {
+    ...(coverImage?.url && {
       image: {
         '@type': 'ImageObject',
-        url: post.coverImage.url,
-        width: post.coverImage.width,
-        height: post.coverImage.height,
+        url: coverImage.url,
+        width: coverImage.width,
+        height: coverImage.height,
       },
     }),
     author: authorSchema,

@@ -24,6 +24,9 @@ export async function generateMetadata(
 
   const previousImages = (await parent).openGraph?.images || []
 
+  const author = typeof post.author === 'object' ? post.author : null
+  const coverImage = typeof post.coverImage === 'object' ? post.coverImage : null
+
   return {
     title: post.title,
     description: post.excerpt,
@@ -31,16 +34,16 @@ export async function generateMetadata(
       title: post.title,
       description: post.excerpt,
       type: 'article',
-      publishedTime: post.publishedAt,
+      publishedTime: post.publishedAt || undefined,
       modifiedTime: post.updatedAt,
-      authors: [post.author.name],
-      images: post.coverImage
+      authors: author ? [author.name] : [],
+      images: coverImage?.url
         ? [
             {
-              url: post.coverImage.url,
+              url: coverImage.url,
               width: 1200,
               height: 630,
-              alt: post.coverImage.alt || post.title,
+              alt: coverImage.alt || post.title,
             },
           ]
         : previousImages,
@@ -49,7 +52,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: post.coverImage ? [post.coverImage.url] : undefined,
+      images: coverImage?.url ? [coverImage.url] : undefined,
     },
   }
 }

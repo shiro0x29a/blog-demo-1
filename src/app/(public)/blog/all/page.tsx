@@ -53,7 +53,7 @@ export default async function AllPage({ searchParams }: AllPageProps) {
       <BlogPostsClient
         allPosts={allPosts.docs}
         paginatedPosts={paginatedPosts.docs}
-        currentPage={paginatedPosts.page}
+        currentPage={paginatedPosts.page ?? 1}
         totalPages={totalPages}
         hasNextPage={paginatedPosts.hasNextPage}
         hasPrevPage={paginatedPosts.hasPrevPage}

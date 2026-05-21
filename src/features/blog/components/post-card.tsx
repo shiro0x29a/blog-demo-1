@@ -7,13 +7,17 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const coverImage = typeof post.coverImage === 'object' ? post.coverImage : null
+  const author = typeof post.author === 'object' ? post.author : null
+  const authorAvatar = author && typeof author.avatar === 'object' ? author.avatar : null
+
   return (
     <article className="group relative bg-card rounded-lg border overflow-hidden hover:shadow-lg transition-shadow">
-      {post.coverImage && (
+      {coverImage && (
         <Link href={`/blog/${post.slug}`} className="block relative aspect-video">
           <Image
-            src={post.coverImage.large || post.coverImage.url}
-            alt={post.coverImage.alt || post.title}
+            src={coverImage.sizes?.large?.url || coverImage.url || ''}
+            alt={coverImage.alt || post.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -33,16 +37,16 @@ export function PostCard({ post }: PostCardProps) {
 
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            {post.author.avatar && (
+            {authorAvatar && (
               <Image
-                src={post.author.avatar.thumbnail || post.author.avatar.url}
-                alt={post.author.name}
+                src={authorAvatar.sizes?.thumbnail?.url || authorAvatar.url || ''}
+                alt={author?.name || ''}
                 width={24}
                 height={24}
                 className="rounded-full"
               />
             )}
-            <span>{post.author.name}</span>
+            <span>{author?.name}</span>
           </div>
 
           {post.publishedAt && (

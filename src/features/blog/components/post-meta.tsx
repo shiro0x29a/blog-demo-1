@@ -8,13 +8,17 @@ interface PostMetaProps {
 }
 
 export function PostMeta({ post }: PostMetaProps) {
+  const coverImage = typeof post.coverImage === 'object' ? post.coverImage : null
+  const author = typeof post.author === 'object' ? post.author : null
+  const authorAvatar = author && typeof author.avatar === 'object' ? author.avatar : null
+
   return (
     <header className="mb-8">
-      {post.coverImage && (
+      {coverImage && (
         <div className="relative aspect-video mb-8 rounded-lg overflow-hidden">
           <Image
-            src={post.coverImage.large || post.coverImage.url}
-            alt={post.coverImage.alt || post.title}
+            src={coverImage.sizes?.large?.url || coverImage.url || ''}
+            alt={coverImage.alt || post.title}
             fill
             className="object-cover"
             priority
@@ -28,17 +32,17 @@ export function PostMeta({ post }: PostMetaProps) {
       <div className="flex flex-wrap items-center gap-4 mb-4">
         {/* Author */}
         <div className="flex items-center gap-2 text-muted-foreground">
-          {!post.author.avatar && <User className="w-4 h-4" />}
-          {post.author.avatar && (
+          {!authorAvatar && <User className="w-4 h-4" />}
+          {authorAvatar && (
             <Image
-              src={post.author.avatar.thumbnail || post.author.avatar.url}
-              alt={post.author.name}
+              src={authorAvatar.sizes?.thumbnail?.url || authorAvatar.url || ''}
+              alt={author?.name || ''}
               width={32}
               height={32}
               className="rounded-full"
             />
           )}
-          <span>{post.author.name}</span>
+          <span>{author?.name}</span>
         </div>
 
         {/* Date */}
@@ -59,15 +63,18 @@ export function PostMeta({ post }: PostMetaProps) {
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
             <Tag className="w-4 h-4 text-muted-foreground" />
-            {post.tags.map((tag) => (
-              <Link
-                key={tag.id}
-                href={`/blog/tag/${encodeURIComponent(tag.name)}`}
-                className="text-sm px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-              >
-                {tag.name}
-              </Link>
-            ))}
+            {post.tags.map((tag) => {
+              if (typeof tag === 'number') return null
+              return (
+                <Link
+                  key={tag.id}
+                  href={`/blog/tag/${encodeURIComponent(tag.name)}`}
+                  className="text-sm px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                >
+                  {tag.name}
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>
@@ -81,17 +88,20 @@ export function PostMeta({ post }: PostMetaProps) {
           >
             Blog
           </Link>
-          {post.categories.map((category, index) => (
-            <span key={category.id} className="flex items-center gap-1">
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              <Link
-                href={`/blog/category/${category.slug}`}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {category.name}
-              </Link>
-            </span>
-          ))}
+          {post.categories.map((category, index) => {
+            if (typeof category === 'number') return null
+            return (
+              <span key={category.id} className="flex items-center gap-1">
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <Link
+                  href={`/blog/category/${category.slug}`}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {category.name}
+                </Link>
+              </span>
+            )
+          })}
         </div>
       )}
 
