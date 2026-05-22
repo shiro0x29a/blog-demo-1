@@ -30,24 +30,18 @@ export async function generateMetadata(
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { slug } = await params
-  console.log('[CategoryPage] slug:', slug)
   
   const { page } = await searchParams
   const currentPage = parseInt(page || '1', 10)
   const limit = 9
 
   const category = await getCategoryBySlug(slug)
-  console.log('[CategoryPage] category:', category)
 
   if (!category) {
     notFound()
   }
-
-  console.log('[CategoryPage] calling getPosts with category.id:', category.id)
   
   const posts = await getPosts({ page: currentPage, limit, category: String(category.id) })
-  
-  console.log('[CategoryPage] posts result:', { totalDocs: posts.totalDocs, docsCount: posts.docs.length })
 
   if (!posts) {
     notFound()
